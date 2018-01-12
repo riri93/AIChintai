@@ -26,6 +26,7 @@ import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.template.ButtonsTemplate;
+import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.profile.UserProfileResponse;
 
 import retrofit2.Response;
@@ -152,6 +153,33 @@ public class ChintaiBotController {
 			TemplateMessage templateMessage = new TemplateMessage("言語を選択してください。", buttonsTemplate);
 
 			PushMessage pushMessage = new PushMessage(userId, templateMessage);
+			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+
+		}
+
+		// when user clicks search room in the menu
+
+		if (intentName.equals("search room")) {
+
+			BotInformation botInformation = candidate.getBotInformation();
+			TextMessage textMessage = new TextMessage("どの駅の近くでお部屋を探していますか？");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+
+			botInformationRepository.saveAndFlush(botInformation);
+
+		}
+
+		// if user answers it's good for how was it question
+
+		if (intentName.equals("its good rooms")) {
+			BotInformation botInformation = new BotInformation();
+			botInformation = candidate.getBotInformation();
+
+			botInformationRepository.saveAndFlush(botInformation);
+
+			TextMessage textMessage = new TextMessage("ありがとうございます！");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
 		}
