@@ -182,6 +182,22 @@ public class ChintaiBotController {
 			// TODO
 		}
 
+		if (intentName.equals("other rooms")) {
+			BotInformation botInformation = candidate.getBotInformation();
+			TextMessage textMessage = new TextMessage("どの駅の近くでお部屋を探していますか？");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			botInformation.setIntentName("other rooms");
+			botInformationRepository.saveAndFlush(botInformation);
+		}
+
+		if (intentName.equals("more rooms")) {
+			BotInformation botInformation = candidate.getBotInformation();
+			botInformation.setIntentName("more rooms");
+			botInformationRepository.saveAndFlush(botInformation);
+			// TODO
+		}
+
 		// when user clicks search room in the menu
 		if (intentName.equals("search room")) {
 
@@ -207,7 +223,6 @@ public class ChintaiBotController {
 
 		}
 
-
 		// if user select the distance
 		if (intentName.equals("distance")) {
 			String distanceToSearch = "";
@@ -232,7 +247,6 @@ public class ChintaiBotController {
 				}
 			}
 		}
-
 
 		// if nearest station is not available again
 		if (intentName.equals("station not available again")) {
