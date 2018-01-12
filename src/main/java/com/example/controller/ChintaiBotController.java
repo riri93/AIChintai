@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -377,8 +378,17 @@ public class ChintaiBotController {
 	public void searchRooms(Candidate candidate, String userId, String CHANNEL_ACCESS_TOKEN, String timestamp) {
 		List<Room> rooms = new ArrayList<Room>();
 		rooms = roomRepository.findRoomsByAllFields();
+		List<Room> roomsToSend = new ArrayList<Room>();
 		try {
-			sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
+			if (rooms.size() > 5) {
+				for (int i = 0; i < 5; i++) {
+					roomsToSend.add(rooms.get(i));
+				}
+				sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, roomsToSend);
+			} else {
+
+				sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
+			}
 		} catch (Exception e) {
 			System.out.println("searchRooms: Exception is raised ");
 			e.printStackTrace();
