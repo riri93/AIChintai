@@ -143,7 +143,8 @@ public class ChintaiBotController {
 			if (customerMessage.contains("駅")) {
 				stationToSearch = stationToSearch.replace(" 駅 ", "");
 			}
-
+			
+			botInformation.setIntentName("station");
 			botInformation.setStationToSearch(stationToSearch);
 			botInformationRepository.saveAndFlush(botInformation);
 
@@ -164,7 +165,7 @@ public class ChintaiBotController {
 			TextMessage textMessage = new TextMessage("どの駅の近くでお部屋を探していますか？");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
-
+			botInformation.setIntentName("search room");
 			botInformationRepository.saveAndFlush(botInformation);
 
 		}
@@ -173,7 +174,7 @@ public class ChintaiBotController {
 		if (intentName.equals("its good rooms")) {
 			BotInformation botInformation = new BotInformation();
 			botInformation = candidate.getBotInformation();
-
+			botInformation.setIntentName("its good rooms");
 			botInformationRepository.saveAndFlush(botInformation);
 
 			TextMessage textMessage = new TextMessage("ありがとうございます！");
