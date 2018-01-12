@@ -1,8 +1,11 @@
 package com.example.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.print.CancelablePrintJob;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,8 +16,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.entity.BotInformation;
+import com.example.entity.Candidate;
+import com.example.repository.BotInformationRepository;
+import com.example.repository.CandidateRepository;
+import com.linecorp.bot.client.LineMessagingServiceBuilder;
+import com.linecorp.bot.model.PushMessage;
+import com.linecorp.bot.model.profile.UserProfileResponse;
+
+import retrofit2.Response;
+
 @RestController
 public class ChintaiBotController {
+
+	@Autowired
+	CandidateRepository candidateRepository;
+
+	@Autowired
+	BotInformationRepository botInformationRepository;
 
 	/**
 	 * @author Nour
@@ -64,6 +83,72 @@ public class ChintaiBotController {
 		System.out.println("********************LANGUAGE : " + language);
 		System.out.println("*******************INTENT NAME : " + intentName);
 		System.out.println("********************CUSTOMER MESSAGE : " + customerMessage);
+
+		Candidate candidate = new Candidate();
+
+		Response<UserProfileResponse> lineResponse = LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build()
+				.getProfile(userId).execute();
+		String nameUser = "";
+		String pictureUrl = "";
+		if (lineResponse.isSuccessful()) {
+			UserProfileResponse profile = lineResponse.body();
+			nameUser = profile.getDisplayName();
+			pictureUrl = profile.getPictureUrl();
+		} else {
+			System.out.println(lineResponse.code() + " " + lineResponse.message());
+		}
+
+		// create candidate if not registered
+		if (candidateRepository.findByUserLineId(userId) == null) {
+			Candidate candidateToRegister = new Candidate();
+
+			if (nameUser != null && !nameUser.equals("")) {
+				candidateToRegister.setUserName(nameUser);
+			}
+			if (nameUser != null && !nameUser.equals("")) {
+				candidateToRegister.setProfilePicture(pictureUrl);
+			}
+			candidateToRegister.setUserLineId(userId);
+			candidateRepository.saveAndFlush(candidateToRegister);
+		}
+
+		candidate = candidateRepository.findByUserLineId(userId);
+
+		// create bot information of null
+		if (candidate.getBotInformation() == null) {
+			BotInformation botInformation = new BotInformation();
+			botInformation.setIntentName("search room");
+			botInformationRepository.saveAndFlush(botInformation);
+
+			candidate.setBotInformation(botInformation);
+			candidateRepository.saveAndFlush(candidate);
+		}
+
+		// search for station
+		if (intentName.equals("station")) {
+			BotInformation botInformation = new BotInformation();
+			botInformation = candidate.getBotInformation();
+
+			String stationToSearch = "";
+
+			if (customerMessage.contains("の近くで探しています。")) {
+				stationToSearch = customerMessage.replace("の近くで探しています。", "");
+			} else if (customerMessage.contains("I want to find a job near ")) {
+				stationToSearch = customerMessage.replace("I want to find a job near ", "");
+			}
+
+			if (customerMessage.contains("駅")) {
+				stationToSearch = stationToSearch.replace(" 駅 ", "");
+			} else if (customerMessage.contains("Station")) {
+				stationToSearch = stationToSearch.replace(" Station ", "");
+			} else if (customerMessage.contains("station")) {
+				stationToSearch = stationToSearch.replace(" station ", "");
+			}
+
+			botInformation.setStationToSearch(stationToSearch);
+			botInformationRepository.saveAndFlush(botInformation);
+
+		}
 
 	}
 
