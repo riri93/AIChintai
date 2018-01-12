@@ -1,9 +1,13 @@
 package com.example.controller;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.print.CancelablePrintJob;
@@ -19,14 +23,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.BotInformation;
 import com.example.entity.Candidate;
+import com.example.entity.Room;
 import com.example.repository.BotInformationRepository;
 import com.example.repository.CandidateRepository;
+import com.example.tool.AsynchronousService;
 import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.MessageAction;
+
 import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.template.ButtonsTemplate;
 import com.linecorp.bot.model.message.TextMessage;
+
+import com.linecorp.bot.model.action.URIAction;
+import com.linecorp.bot.model.message.TemplateMessage;
+import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.template.CarouselColumn;
+import com.linecorp.bot.model.message.template.CarouselTemplate;
+
 import com.linecorp.bot.model.profile.UserProfileResponse;
 
 import retrofit2.Response;
@@ -39,6 +53,9 @@ public class ChintaiBotController {
 
 	@Autowired
 	BotInformationRepository botInformationRepository;
+
+	@Autowired
+	AsynchronousService anAsynchronousService;
 
 	/**
 	 * @author Nour
@@ -190,6 +207,79 @@ public class ChintaiBotController {
 
 		}
 
+	}
+
+	/**
+	 * @author Wala Ben Amor
+	 * 
+	 *         Method to send the list of rooms
+	 * @param candidate
+	 * @param userId
+	 * @param CHANNEL_ACCESS_TOKEN
+	 * @param timestamp
+	 * @param rooms
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public void sendCarouselRooms(Candidate candidate, String userId, String CHANNEL_ACCESS_TOKEN, String timestamp,
+			List<Room> rooms) throws IOException, JSONException {
+		java.util.List<CarouselColumn> columns = new ArrayList<CarouselColumn>();
+
+		for (Room room : rooms) {
+
+			String title = "";
+
+			String img = null;
+
+			title = room.getNameBuilding();
+
+			if (title.length() > 39) {
+				title = title.substring(0, 39);
+			}
+			byte[] titleByte = title.getBytes(StandardCharsets.UTF_8); // Explicit,
+			title = new String(titleByte, StandardCharsets.UTF_8);
+
+			/*************************/
+			String textToSend = room.getNameBuilding() + " | " + room.getPostCode();
+
+			if (textToSend.length() > 59) {
+				textToSend = textToSend.substring(0, 59);
+			}
+			byte[] labelToByte = textToSend.getBytes(StandardCharsets.UTF_8); // Explicit,
+			textToSend = new String(labelToByte, StandardCharsets.UTF_8);
+			/**************************/
+
+			String detail = "Detail";
+
+			String option = "Option";
+
+			// String link = "月" + room.getPrice() + "円";
+
+			// URIAction uriAction1 = new URIAction(detail, link);
+			MessageAction messageAction1 = new MessageAction(detail, "月" + room.getPrice() + "円");
+			MessageAction messageAction2 = new MessageAction(option, "詳細をみる");
+
+			CarouselColumn column = new CarouselColumn(img, title, textToSend,
+					Arrays.asList(messageAction1, messageAction2));
+			columns.add(column);
+		}
+
+		CarouselTemplate carouselTemplate = new CarouselTemplate(columns);
+		String templateText = "";
+		templateText = "Which building?";
+
+		TemplateMessage templateMessage = new TemplateMessage(templateText, carouselTemplate);
+		PushMessage pushMessage = new PushMessage(userId, templateMessage);
+
+		try {
+			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			/******** THREAD ***********/
+			anAsynchronousService.executeAsynchronously(userId, "japanese", CHANNEL_ACCESS_TOKEN);
+			/****************/
+		} catch (IOException e) {
+			System.out.println("Exception is raised ");
+			e.printStackTrace();
+		}
 	}
 
 }
