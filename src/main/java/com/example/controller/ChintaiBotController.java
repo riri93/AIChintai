@@ -207,6 +207,18 @@ public class ChintaiBotController {
 
 		}
 
+		// if nearest station is not available again
+		if (intentName.equals("station not available again")) {
+			BotInformation botInformation = new BotInformation();
+			botInformation = candidate.getBotInformation();
+			botInformation.setIntentName("station not available again");
+			botInformationRepository.saveAndFlush(botInformation);
+
+			TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+		}
+
 	}
 
 	/**
