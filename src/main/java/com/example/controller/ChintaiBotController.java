@@ -59,7 +59,7 @@ public class ChintaiBotController {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/webhookNewBot", method = RequestMethod.POST)
+	@RequestMapping(value = "/webhookAIChintai", method = RequestMethod.POST)
 	private void webhook(@RequestBody Map<String, Object> obj) throws JSONException, IOException {
 
 		String CHANNEL_ACCESS_TOKEN = "Zc6e1XlR7/4a6uNGB5mQAF21zDgCct5C43eL4DrKdfdXX73vGvFtvVPQbTcZNwbHulPADQCtLMKjwI34KA1aZh9hSiFej9tf8UOE/4x8N5gdTcpef1jMVe2ly8ZWhmyH+LKlNOGJFlZeiCjBSo35AgdB04t89/1O/w1cDnyilFU=";
@@ -158,7 +158,6 @@ public class ChintaiBotController {
 		}
 
 		// when user clicks search room in the menu
-
 		if (intentName.equals("search room")) {
 
 			BotInformation botInformation = candidate.getBotInformation();
@@ -171,7 +170,6 @@ public class ChintaiBotController {
 		}
 
 		// if user answers it's good for how was it question
-
 		if (intentName.equals("its good rooms")) {
 			BotInformation botInformation = new BotInformation();
 			botInformation = candidate.getBotInformation();
