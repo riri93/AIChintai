@@ -182,6 +182,31 @@ public class ChintaiBotController {
 
 		}
 
+		// if user select the distance
+		if (intentName.equals("distance")) {
+			String distanceToSearch = "";
+			if (parameters != null && !parameters.equals("")) {
+				if (parameters.getString("distance") != null && !parameters.getString("distance").equals("")) {
+					distanceToSearch = parameters.getString("distance");
+					BotInformation botInformation = new BotInformation();
+					botInformation = candidate.getBotInformation();
+					botInformation.setDistanceToSearch(distanceToSearch);
+					botInformationRepository.saveAndFlush(botInformation);
+
+					ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, "家賃はいくらがいいですか？", null,
+							Arrays.asList(new MessageAction("5万円未満", "5万円未満 がいいです。"),
+									new MessageAction("7万円未満", "7万円未満 がいいです。"),
+									new MessageAction("10万円未満", "10万円未満 がいいです。"),
+									new MessageAction("10万円以上", "10万円以上 がいいです。")));
+					TemplateMessage templateMessage = new TemplateMessage("家賃はいくらがいいですか？", buttonsTemplate);
+
+					PushMessage pushMessage = new PushMessage(userId, templateMessage);
+					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+
+				}
+			}
+		}
+
 	}
 
 }
