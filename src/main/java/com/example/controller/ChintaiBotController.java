@@ -182,6 +182,22 @@ public class ChintaiBotController {
 			// TODO
 		}
 
+		if (intentName.equals("other rooms")) {
+			BotInformation botInformation = candidate.getBotInformation();
+			TextMessage textMessage = new TextMessage("どの駅の近くでお部屋を探していますか？");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			botInformation.setIntentName("other rooms");
+			botInformationRepository.saveAndFlush(botInformation);
+		}
+
+		if (intentName.equals("more rooms")) {
+			BotInformation botInformation = candidate.getBotInformation();
+			botInformation.setIntentName("more rooms");
+			botInformationRepository.saveAndFlush(botInformation);
+			// TODO
+		}
+
 		// when user clicks search room in the menu
 		if (intentName.equals("search room")) {
 
@@ -205,6 +221,31 @@ public class ChintaiBotController {
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
+		}
+
+		// if user select the distance
+		if (intentName.equals("distance")) {
+			String distanceToSearch = "";
+			if (parameters != null && !parameters.equals("")) {
+				if (parameters.getString("distance") != null && !parameters.getString("distance").equals("")) {
+					distanceToSearch = parameters.getString("distance");
+					BotInformation botInformation = new BotInformation();
+					botInformation = candidate.getBotInformation();
+					botInformation.setDistanceToSearch(distanceToSearch);
+					botInformationRepository.saveAndFlush(botInformation);
+
+					ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, "家賃はいくらがいいですか？", null,
+							Arrays.asList(new MessageAction("5万円未満", "5万円未満 がいいです。"),
+									new MessageAction("7万円未満", "7万円未満 がいいです。"),
+									new MessageAction("10万円未満", "10万円未満 がいいです。"),
+									new MessageAction("10万円以上", "10万円以上 がいいです。")));
+					TemplateMessage templateMessage = new TemplateMessage("家賃はいくらがいいですか？", buttonsTemplate);
+
+					PushMessage pushMessage = new PushMessage(userId, templateMessage);
+					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+
+				}
+			}
 		}
 
 		// if nearest station is not available again
@@ -308,6 +349,7 @@ public class ChintaiBotController {
 			System.out.println("Exception is raised ");
 			e.printStackTrace();
 		}
+
 	}
 
 }
