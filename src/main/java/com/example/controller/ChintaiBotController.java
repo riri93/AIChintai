@@ -26,6 +26,7 @@ import com.example.entity.Candidate;
 import com.example.entity.Room;
 import com.example.repository.BotInformationRepository;
 import com.example.repository.CandidateRepository;
+import com.example.repository.RoomRepository;
 import com.example.tool.AsynchronousService;
 import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.model.PushMessage;
@@ -53,6 +54,9 @@ public class ChintaiBotController {
 
 	@Autowired
 	BotInformationRepository botInformationRepository;
+
+	@Autowired
+	RoomRepository roomRepository;
 
 	// @Autowired
 	// AsynchronousService anAsynchronousService;
@@ -195,7 +199,9 @@ public class ChintaiBotController {
 			BotInformation botInformation = candidate.getBotInformation();
 			botInformation.setIntentName("more rooms");
 			botInformationRepository.saveAndFlush(botInformation);
-			// TODO Search rooms
+			/********** Search for Rooms ************/
+			searchRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp);
+			/**********************/
 		}
 
 		// when user clicks search room in the menu
@@ -270,7 +276,7 @@ public class ChintaiBotController {
 					botInformation.setPriceToSearch(priceToSearch);
 					botInformationRepository.saveAndFlush(botInformation);
 					/********** Search for Rooms ************/
-
+					searchRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp);
 					/**********************/
 				}
 			}
@@ -358,6 +364,25 @@ public class ChintaiBotController {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Method to search rooms
+	 * 
+	 * @param candidate
+	 * @param userId
+	 * @param CHANNEL_ACCESS_TOKEN
+	 * @param timestamp
+	 */
+	public void searchRooms(Candidate candidate, String userId, String CHANNEL_ACCESS_TOKEN, String timestamp) {
+		List<Room> rooms = new ArrayList<Room>();
+		rooms = roomRepository.findRoomsByAllFields();
+		try {
+			sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
+		} catch (Exception e) {
+			System.out.println("searchRooms: Exception is raised ");
+			e.printStackTrace();
+		}
 	}
 
 }
