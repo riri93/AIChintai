@@ -143,7 +143,7 @@ public class ChintaiBotController {
 			if (customerMessage.contains("駅")) {
 				stationToSearch = stationToSearch.replace(" 駅 ", "");
 			}
-			
+
 			botInformation.setIntentName("station");
 			botInformation.setStationToSearch(stationToSearch);
 			botInformationRepository.saveAndFlush(botInformation);
@@ -181,6 +181,18 @@ public class ChintaiBotController {
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
+		}
+
+		// if nearest station is not available again
+		if (intentName.equals("station not available again")) {
+			BotInformation botInformation = new BotInformation();
+			botInformation = candidate.getBotInformation();
+			botInformation.setIntentName("station not available again");
+			botInformationRepository.saveAndFlush(botInformation);
+
+			TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 		}
 
 	}
