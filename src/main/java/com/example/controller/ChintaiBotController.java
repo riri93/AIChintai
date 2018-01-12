@@ -162,7 +162,7 @@ public class ChintaiBotController {
 			botInformation = candidate.getBotInformation();
 			botInformation.setIntentName("station not available");
 			botInformationRepository.saveAndFlush(botInformation);
-
+			// TODO
 		}
 
 		// when user clicks search room in the menu
