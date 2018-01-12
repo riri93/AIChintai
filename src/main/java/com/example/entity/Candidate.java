@@ -71,4 +71,12 @@ public class Candidate extends UserInformation implements Serializable {
 		this.durationInJapan = durationInJapan;
 	}
 
+	public BotInformation getBotInformation() {
+		return botInformation;
+	}
+
+	public void setBotInformation(BotInformation botInformation) {
+		this.botInformation = botInformation;
+	}
+
 }
