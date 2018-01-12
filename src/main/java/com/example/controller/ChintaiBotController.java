@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,9 @@ import com.example.repository.BotInformationRepository;
 import com.example.repository.CandidateRepository;
 import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.model.PushMessage;
+import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.message.TemplateMessage;
+import com.linecorp.bot.model.message.template.ButtonsTemplate;
 import com.linecorp.bot.model.profile.UserProfileResponse;
 
 import retrofit2.Response;
@@ -133,20 +137,22 @@ public class ChintaiBotController {
 
 			if (customerMessage.contains("の近くで探しています。")) {
 				stationToSearch = customerMessage.replace("の近くで探しています。", "");
-			} else if (customerMessage.contains("I want to find a job near ")) {
-				stationToSearch = customerMessage.replace("I want to find a job near ", "");
 			}
 
 			if (customerMessage.contains("駅")) {
 				stationToSearch = stationToSearch.replace(" 駅 ", "");
-			} else if (customerMessage.contains("Station")) {
-				stationToSearch = stationToSearch.replace(" Station ", "");
-			} else if (customerMessage.contains("station")) {
-				stationToSearch = stationToSearch.replace(" station ", "");
 			}
 
 			botInformation.setStationToSearch(stationToSearch);
 			botInformationRepository.saveAndFlush(botInformation);
+
+			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, "どれぐらい近いほうがいいですか？", null, Arrays.asList(
+					new MessageAction("徒歩5分以内", "徒歩5分以内 がいいです。"), new MessageAction("徒歩10分以内", "徒歩10分以内 がいいです。"),
+					new MessageAction("徒歩20分以内", "徒歩20分以内 がいいです。"), new MessageAction("徒歩30分以内", "徒歩30分以内 がいいです。")));
+			TemplateMessage templateMessage = new TemplateMessage("言語を選択してください。", buttonsTemplate);
+
+			PushMessage pushMessage = new PushMessage(userId, templateMessage);
+			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
 		}
 
