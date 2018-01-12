@@ -129,7 +129,7 @@ public class ChintaiBotController {
 			candidateRepository.saveAndFlush(candidate);
 		}
 
-		// search for station
+		// search for station and display distance
 		if (intentName.equals("station")) {
 			BotInformation botInformation = new BotInformation();
 			botInformation = candidate.getBotInformation();
@@ -155,7 +155,14 @@ public class ChintaiBotController {
 
 			PushMessage pushMessage = new PushMessage(userId, templateMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+		}
 
+		if (intentName.equals("station not available")) {
+			BotInformation botInformation = new BotInformation();
+			botInformation = candidate.getBotInformation();
+			botInformation.setIntentName("station not available");
+			botInformationRepository.saveAndFlush(botInformation);
+			// TODO
 		}
 
 		// when user clicks search room in the menu
