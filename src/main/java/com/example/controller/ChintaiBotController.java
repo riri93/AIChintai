@@ -219,6 +219,22 @@ public class ChintaiBotController {
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 		}
 
+		// if the user choose a price
+		if (intentName.equals("price")) {
+			if (parameters != null) {
+				if (parameters.getString("price") != null && !parameters.getString("price").equals("")) {
+					String priceToSearch = parameters.getString("price");
+					BotInformation botInformation = new BotInformation();
+					botInformation = candidate.getBotInformation();
+					botInformation.setPriceToSearch(priceToSearch);
+					botInformationRepository.saveAndFlush(botInformation);
+					/********** Search for Rooms ************/
+
+					/**********************/
+				}
+			}
+		}
+
 	}
 
 	/**
