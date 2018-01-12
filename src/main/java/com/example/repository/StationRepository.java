@@ -14,10 +14,11 @@ import com.example.entity.Station;
 @Repository
 
 public interface StationRepository extends JpaRepository<Station, Serializable> {
-	@Query(value = "SELECT s.* from  Station s where lower(s.stationName) like lower(CONCAT('%',:station,'%')) or abs(cast( GREATEST(length(:station),length(s.stationName)) -levenshtein( lower(:station),lower(s.stationName)) as float))/length(:station)*100 >40 desc \n#pageable\n", nativeQuery = true, countQuery = "SELECT count(s.*) from  station s where lower(s.stationName) like lower(CONCAT('%',:station,'%')) or abs(cast( GREATEST(length(:station),length(s.stationName)) -levenshtein( lower(:station),lower(s.stationName)) as float))/length(:station)*100 >40 desc \n#pageable\n")
+	@Query(value = "SELECT s.* from  Station s where lower(s.station_name) like lower(CONCAT('%',:station,'%')) or abs(cast( GREATEST(length(:station),length(s.station_name)) -levenshtein( lower(:station),lower(s.station_name)) as float))/length(:station)*100 >40 desc \n#pageable\n", nativeQuery = true, countQuery = "SELECT count(s.*) from  station s where lower(s.station_name) like lower(CONCAT('%',:station,'%')) or abs(cast( GREATEST(length(:station),length(s.station_name)) -levenshtein( lower(:station),lower(s.station_name)) as float))/length(:station)*100 >40 desc \n#pageable\n")
 	public Page findStationss(@Param("station") String station, Pageable pageable);
 	
 	@Query("SELECT a FROM Station a where a.idStation = :id")
 	public Station findStationById(@Param("id") int id);
 
 }
+_n
