@@ -40,8 +40,8 @@ public class MyThread implements Runnable {
 			TemplateMessage templateMessage;
 			System.out.println("thread  english");
 			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "こんなお部屋はどうですか？",
-					Arrays.asList(new MessageAction("More Rooms", "もっと欲しい"), new MessageAction("Other Rooms", "他を探したい"),
-							new MessageAction("It's good", "素晴らしい")));
+					Arrays.asList(new MessageAction("もっと欲しい", "もっと欲しいです。"), new MessageAction("他を探したい", "他を探したいです。"),
+							new MessageAction("素晴らしい", "素晴らしいです！")));
 			templateMessage = new TemplateMessage("こんなお部屋はどうですか？", buttonsTemplate);
 			PushMessage pushMessage = new PushMessage(userId, templateMessage);
 			LineMessagingServiceBuilder.create(channelToken).build().pushMessage(pushMessage).execute();

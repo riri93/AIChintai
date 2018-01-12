@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -31,6 +32,7 @@ import com.example.entity.Station;
 import com.example.repository.BotInformationRepository;
 import com.example.repository.CandidateRepository;
 import com.example.repository.StationRepository;
+import com.example.repository.RoomRepository;
 import com.example.tool.AsynchronousService;
 import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.model.PushMessage;
@@ -62,6 +64,9 @@ public class ChintaiBotController {
 
 	@Autowired
 	StationRepository stationRepository;
+
+	@Autowired
+	RoomRepository roomRepository;
 
 	// @Autowired
 	// AsynchronousService anAsynchronousService;
@@ -295,7 +300,7 @@ public class ChintaiBotController {
 			}
 
 		}
-
+		// if the user choose other rooms
 		if (intentName.equals("other rooms")) {
 			BotInformation botInformation = candidate.getBotInformation();
 			TextMessage textMessage = new TextMessage("どの駅の近くでお部屋を探していますか？");
@@ -304,12 +309,14 @@ public class ChintaiBotController {
 			botInformation.setIntentName("other rooms");
 			botInformationRepository.saveAndFlush(botInformation);
 		}
-
+		// if the user choose more rooms
 		if (intentName.equals("more rooms")) {
 			BotInformation botInformation = candidate.getBotInformation();
 			botInformation.setIntentName("more rooms");
 			botInformationRepository.saveAndFlush(botInformation);
-			// TODO
+			/********** Search for Rooms ************/
+			searchRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp);
+			/**********************/
 		}
 
 		// when user clicks search room in the menu
@@ -384,10 +391,17 @@ public class ChintaiBotController {
 					botInformation.setPriceToSearch(priceToSearch);
 					botInformationRepository.saveAndFlush(botInformation);
 					/********** Search for Rooms ************/
-
+					searchRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp);
 					/**********************/
 				}
 			}
+		}
+
+		// if the user choose its good rooms
+		if (intentName.equals("its good rooms")) {
+			TextMessage textMessage = new TextMessage("ありがとうございます！");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 		}
 
 	}
@@ -465,6 +479,34 @@ public class ChintaiBotController {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Method to search rooms
+	 * 
+	 * @param candidate
+	 * @param userId
+	 * @param CHANNEL_ACCESS_TOKEN
+	 * @param timestamp
+	 */
+	public void searchRooms(Candidate candidate, String userId, String CHANNEL_ACCESS_TOKEN, String timestamp) {
+		List<Room> rooms = new ArrayList<Room>();
+		rooms = roomRepository.findRoomsByAllFields();
+		List<Room> roomsToSend = new ArrayList<Room>();
+		try {
+			if (rooms.size() > 5) {
+				for (int i = 0; i < 5; i++) {
+					roomsToSend.add(rooms.get(i));
+				}
+				sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, roomsToSend);
+			} else {
+
+				sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
+			}
+		} catch (Exception e) {
+			System.out.println("searchRooms: Exception is raised ");
+			e.printStackTrace();
+		}
 	}
 
 }
