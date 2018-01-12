@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.print.CancelablePrintJob;
@@ -15,6 +16,8 @@ import javax.print.CancelablePrintJob;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,11 +27,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.entity.BotInformation;
 import com.example.entity.Candidate;
 import com.example.entity.Room;
+import com.example.entity.Station;
 import com.example.repository.BotInformationRepository;
 import com.example.repository.CandidateRepository;
+import com.example.repository.StationRepository;
 import com.example.tool.AsynchronousService;
 import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.model.PushMessage;
+import com.linecorp.bot.model.action.Action;
 import com.linecorp.bot.model.action.MessageAction;
 
 import com.linecorp.bot.model.message.TemplateMessage;
@@ -40,7 +46,7 @@ import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.template.CarouselColumn;
 import com.linecorp.bot.model.message.template.CarouselTemplate;
-
+import com.linecorp.bot.model.message.template.ConfirmTemplate;
 import com.linecorp.bot.model.profile.UserProfileResponse;
 
 import retrofit2.Response;
@@ -53,6 +59,9 @@ public class ChintaiBotController {
 
 	@Autowired
 	BotInformationRepository botInformationRepository;
+
+	@Autowired
+	StationRepository stationRepository;
 
 	// @Autowired
 	// AsynchronousService anAsynchronousService;
@@ -146,8 +155,64 @@ public class ChintaiBotController {
 			candidateRepository.saveAndFlush(candidate);
 		}
 
+		if (intentName.equals("Default Fallback Intent")) {
+
+			BotInformation botInformation = new BotInformation();
+			botInformation.setIntentName("Default Fallback Intent");
+
+			Page nearestStations;
+
+			botInformation.setStationToSearch(customerMessage);
+			botInformationRepository.saveAndFlush(botInformation);
+			nearestStations = stationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
+					new PageRequest(0, 3));
+
+			if (nearestStations.getContent().size() > 0) {
+
+				botInformationRepository.saveAndFlush(botInformation);
+				List<Action> messageActions = new ArrayList<Action>();
+				List<Object[]> nearStationObj = nearestStations.getContent();
+
+				for (Object[] ObjNearestStation : nearStationObj) {
+					Station station = stationRepository.findStationById((int) ObjNearestStation[0]);
+					String lineName = station.getLineName();
+					if (lineName.length() > 6) {
+						lineName = lineName.substring(0, 6);
+					}
+					byte[] lineNameStation = lineName.getBytes(StandardCharsets.UTF_8);
+					String lineNameJapanese = new String(lineNameStation, StandardCharsets.UTF_8);
+
+					String stationName = station.getStationName();
+					if (station.getStationName().length() > 6) {
+						stationName = station.getStationName().substring(0, 6);
+					}
+
+					byte[] b = stationName.getBytes(StandardCharsets.UTF_8); // Explicit,
+					String japanesString = new String(b, StandardCharsets.UTF_8);
+					MessageAction ma = new MessageAction(japanesString + "駅 | " + lineNameJapanese,
+							station.getStationName() + " 駅 | " + station.getLineName() + "の近くで探しています。");
+					messageActions.add(ma);
+				}
+
+				String neareststationNA = "いいえ。私が探している駅ではありません。";
+				messageActions.add(new MessageAction("違う", neareststationNA));
+				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null,
+						botInformation.getStationToSearch() + "はこの駅のことですか？", messageActions);
+				TemplateMessage templateMessage = new TemplateMessage("駅", buttonsTemplate);
+
+				PushMessage pushMessage = new PushMessage(userId, templateMessage);
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+
+			} else {
+				TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+				PushMessage pushMessage = new PushMessage(userId, textMessage);
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			}
+		}
+
 		// search for station and display distance
 		if (intentName.equals("station")) {
+
 			BotInformation botInformation = new BotInformation();
 			botInformation = candidate.getBotInformation();
 
@@ -179,7 +244,56 @@ public class ChintaiBotController {
 			botInformation = candidate.getBotInformation();
 			botInformation.setIntentName("station not available");
 			botInformationRepository.saveAndFlush(botInformation);
-			// TODO
+
+			Page nearestStations;
+
+			botInformation.setStationToSearch(customerMessage);
+			botInformationRepository.saveAndFlush(botInformation);
+			nearestStations = stationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
+					new PageRequest(1, 3));
+
+			if (nearestStations.getContent().size() > 0) {
+
+				botInformationRepository.saveAndFlush(botInformation);
+				List<Action> messageActions = new ArrayList<Action>();
+				List<Object[]> nearStationObj = nearestStations.getContent();
+
+				for (Object[] ObjNearestStation : nearStationObj) {
+					Station station = stationRepository.findStationById((int) ObjNearestStation[0]);
+					String lineName = station.getLineName();
+					if (lineName.length() > 6) {
+						lineName = lineName.substring(0, 6);
+					}
+					byte[] lineNameStation = lineName.getBytes(StandardCharsets.UTF_8);
+					String lineNameJapanese = new String(lineNameStation, StandardCharsets.UTF_8);
+
+					String stationName = station.getStationName();
+					if (station.getStationName().length() > 6) {
+						stationName = station.getStationName().substring(0, 6);
+					}
+
+					byte[] b = stationName.getBytes(StandardCharsets.UTF_8); // Explicit,
+					String japanesString = new String(b, StandardCharsets.UTF_8);
+					MessageAction ma = new MessageAction(japanesString + "駅 | " + lineNameJapanese,
+							station.getStationName() + " 駅 | " + station.getLineName() + "の近くで探しています。");
+					messageActions.add(ma);
+				}
+
+				String neareststationNA = "いいえ。私が探している駅ではありません再び 。";
+				messageActions.add(new MessageAction("違う", neareststationNA));
+				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null,
+						botInformation.getStationToSearch() + "はこの駅のことですか？", messageActions);
+				TemplateMessage templateMessage = new TemplateMessage("駅", buttonsTemplate);
+
+				PushMessage pushMessage = new PushMessage(userId, templateMessage);
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+
+			} else {
+				TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+				PushMessage pushMessage = new PushMessage(userId, textMessage);
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			}
+
 		}
 
 		if (intentName.equals("other rooms")) {
