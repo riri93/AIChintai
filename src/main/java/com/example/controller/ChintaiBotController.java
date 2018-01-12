@@ -54,8 +54,8 @@ public class ChintaiBotController {
 	@Autowired
 	BotInformationRepository botInformationRepository;
 
-	@Autowired
-	AsynchronousService anAsynchronousService;
+	// @Autowired
+	// AsynchronousService anAsynchronousService;
 
 	/**
 	 * @author Nour
@@ -350,7 +350,8 @@ public class ChintaiBotController {
 		try {
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 			/******** THREAD ***********/
-			anAsynchronousService.executeAsynchronously(userId, "japanese", CHANNEL_ACCESS_TOKEN);
+			// anAsynchronousService.executeAsynchronously(userId, "japanese",
+			// CHANNEL_ACCESS_TOKEN);
 			/****************/
 		} catch (IOException e) {
 			System.out.println("Exception is raised ");
