@@ -1,9 +1,13 @@
 package com.example.controller;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.print.CancelablePrintJob;
@@ -19,14 +23,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.BotInformation;
 import com.example.entity.Candidate;
+import com.example.entity.Room;
 import com.example.repository.BotInformationRepository;
 import com.example.repository.CandidateRepository;
+import com.example.tool.AsynchronousService;
 import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.MessageAction;
+
 import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.template.ButtonsTemplate;
 import com.linecorp.bot.model.message.TextMessage;
+
+import com.linecorp.bot.model.action.URIAction;
+import com.linecorp.bot.model.message.TemplateMessage;
+import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.template.CarouselColumn;
+import com.linecorp.bot.model.message.template.CarouselTemplate;
+
 import com.linecorp.bot.model.profile.UserProfileResponse;
 
 import retrofit2.Response;
@@ -39,6 +53,9 @@ public class ChintaiBotController {
 
 	@Autowired
 	BotInformationRepository botInformationRepository;
+
+	@Autowired
+	AsynchronousService anAsynchronousService;
 
 	/**
 	 * @author Nour
@@ -129,7 +146,7 @@ public class ChintaiBotController {
 			candidateRepository.saveAndFlush(candidate);
 		}
 
-		// search for station
+		// search for station and display distance
 		if (intentName.equals("station")) {
 			BotInformation botInformation = new BotInformation();
 			botInformation = candidate.getBotInformation();
@@ -144,6 +161,7 @@ public class ChintaiBotController {
 				stationToSearch = stationToSearch.replace(" 駅 ", "");
 			}
 
+			botInformation.setIntentName("station");
 			botInformation.setStationToSearch(stationToSearch);
 			botInformationRepository.saveAndFlush(botInformation);
 
@@ -154,7 +172,14 @@ public class ChintaiBotController {
 
 			PushMessage pushMessage = new PushMessage(userId, templateMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+		}
 
+		if (intentName.equals("station not available")) {
+			BotInformation botInformation = new BotInformation();
+			botInformation = candidate.getBotInformation();
+			botInformation.setIntentName("station not available");
+			botInformationRepository.saveAndFlush(botInformation);
+			// TODO
 		}
 
 		// when user clicks search room in the menu
@@ -164,7 +189,7 @@ public class ChintaiBotController {
 			TextMessage textMessage = new TextMessage("どの駅の近くでお部屋を探していますか？");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
-
+			botInformation.setIntentName("search room");
 			botInformationRepository.saveAndFlush(botInformation);
 
 		}
@@ -173,7 +198,7 @@ public class ChintaiBotController {
 		if (intentName.equals("its good rooms")) {
 			BotInformation botInformation = new BotInformation();
 			botInformation = candidate.getBotInformation();
-
+			botInformation.setIntentName("its good rooms");
 			botInformationRepository.saveAndFlush(botInformation);
 
 			TextMessage textMessage = new TextMessage("ありがとうございます！");
@@ -181,6 +206,7 @@ public class ChintaiBotController {
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
 		}
+
 
 		// if user select the distance
 		if (intentName.equals("distance")) {
@@ -205,6 +231,93 @@ public class ChintaiBotController {
 
 				}
 			}
+		}
+
+
+		// if nearest station is not available again
+		if (intentName.equals("station not available again")) {
+			BotInformation botInformation = new BotInformation();
+			botInformation = candidate.getBotInformation();
+			botInformation.setIntentName("station not available again");
+			botInformationRepository.saveAndFlush(botInformation);
+
+			TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+		}
+
+	}
+
+	/**
+	 * @author Wala Ben Amor
+	 * 
+	 *         Method to send the list of rooms
+	 * @param candidate
+	 * @param userId
+	 * @param CHANNEL_ACCESS_TOKEN
+	 * @param timestamp
+	 * @param rooms
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public void sendCarouselRooms(Candidate candidate, String userId, String CHANNEL_ACCESS_TOKEN, String timestamp,
+			List<Room> rooms) throws IOException, JSONException {
+		java.util.List<CarouselColumn> columns = new ArrayList<CarouselColumn>();
+
+		for (Room room : rooms) {
+
+			String title = "";
+
+			String img = null;
+
+			title = room.getNameBuilding();
+
+			if (title.length() > 39) {
+				title = title.substring(0, 39);
+			}
+			byte[] titleByte = title.getBytes(StandardCharsets.UTF_8); // Explicit,
+			title = new String(titleByte, StandardCharsets.UTF_8);
+
+			/*************************/
+			String textToSend = room.getNameBuilding() + " | " + room.getPostCode();
+
+			if (textToSend.length() > 59) {
+				textToSend = textToSend.substring(0, 59);
+			}
+			byte[] labelToByte = textToSend.getBytes(StandardCharsets.UTF_8); // Explicit,
+			textToSend = new String(labelToByte, StandardCharsets.UTF_8);
+			/**************************/
+
+			String detail = "Detail";
+
+			String option = "Option";
+
+			// String link = "月" + room.getPrice() + "円";
+
+			// URIAction uriAction1 = new URIAction(detail, link);
+			MessageAction messageAction1 = new MessageAction(detail, "月" + room.getPrice() + "円");
+			MessageAction messageAction2 = new MessageAction(option, "詳細をみる");
+
+			CarouselColumn column = new CarouselColumn(img, title, textToSend,
+					Arrays.asList(messageAction1, messageAction2));
+			columns.add(column);
+		}
+
+		CarouselTemplate carouselTemplate = new CarouselTemplate(columns);
+		String templateText = "";
+		templateText = "Which building?";
+
+		TemplateMessage templateMessage = new TemplateMessage(templateText, carouselTemplate);
+		PushMessage pushMessage = new PushMessage(userId, templateMessage);
+
+		try {
+			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			/******** THREAD ***********/
+			anAsynchronousService.executeAsynchronously(userId, "japanese", CHANNEL_ACCESS_TOKEN);
+			/****************/
+		} catch (IOException e) {
+			System.out.println("Exception is raised ");
+			e.printStackTrace();
 		}
 
 	}
