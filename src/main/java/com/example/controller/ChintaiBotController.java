@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -542,7 +543,7 @@ public class ChintaiBotController {
 	}
 
 	/**
-	 * Method to search rooms
+	 * Method to search rooms by price and distance
 	 * 
 	 * @param candidate
 	 * @param userId
@@ -551,6 +552,8 @@ public class ChintaiBotController {
 	 */
 	public void searchRooms(Candidate candidate, String userId, String CHANNEL_ACCESS_TOKEN, String timestamp) {
 		List<Room> rooms = new ArrayList<Room>();
+
+		// TODO
 		rooms = roomRepository.findRoomsByAllFields();
 		List<Room> roomsToSend = new ArrayList<Room>();
 		try {
@@ -569,5 +572,46 @@ public class ChintaiBotController {
 		}
 	}
 
-}
+	/**
+	 *
+	 * @author Rihab Kallel
+	 * 
+	 *         method to get the distance between destination and origin addresses
+	 * 
+	 * 
+	 * @param jobsDistance
+	 *            : list of jobs ; as in destinations
+	 * @param nearestStation
+	 *            station chosen by user; as in origin
+	 */
+	public HashMap getJobStationsDistanceMatrix(List<Room> roomsDistance, Station station) {
+		HashMap<Integer, Double> jobsHashMap = new HashMap<>();
 
+		if (station.getLatitudeStation() != null && station.getLongitudeStation() != null) {
+			for (Room room : roomsDistance) {
+				final int R = 6371; // Radius of the earth
+				if (room.getLatitudeRoom() != null && room.getLongitudeRoom() != null) {
+					double latDistance = Math.toRadians(room.getLatitudeRoom() - station.getLatitudeStation());
+					double lonDistance = Math.toRadians(room.getLongitudeRoom() - station.getLongitudeStation());
+					double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+							+ Math.cos(Math.toRadians(station.getLatitudeStation()))
+									* Math.cos(Math.toRadians(room.getLatitudeRoom())) * Math.sin(lonDistance / 2)
+									* Math.sin(lonDistance / 2);
+					double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+					double d = R * c;
+
+					double height = 0;
+
+					d = Math.pow(d, 2) + Math.pow(height, 2);
+
+					double distance = Math.sqrt(d);
+					if (distance < 1) {
+						jobsHashMap.put(room.getIdRoom(), distance);
+					}
+				}
+			}
+		}
+		return jobsHashMap;
+	}
+
+}
