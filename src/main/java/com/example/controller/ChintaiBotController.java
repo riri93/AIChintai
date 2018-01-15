@@ -226,6 +226,7 @@ public class ChintaiBotController {
 						stationToSearch = stationToSearch.replace(" 駅 ", "");
 					}
 
+					botInformation.setStatus(2);
 					botInformation.setIntentName("station");
 					botInformation.setStationToSearch(stationToSearch);
 					botInformationRepository.saveAndFlush(botInformation);
