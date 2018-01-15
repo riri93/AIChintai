@@ -22,7 +22,6 @@ public class Station implements Serializable {
 	private String stationName;
 	private String lineName;
 	private String addressStation;
-
 	@Column(precision = 10, scale = 2)
 	private Double longitudeStation;
 	@Column(precision = 10, scale = 2)

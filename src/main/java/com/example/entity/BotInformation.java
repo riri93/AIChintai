@@ -21,6 +21,8 @@ public class BotInformation implements Serializable {
 	private int idBotInformation;
 	@Column(columnDefinition = "int default 0") /** 0 if first time**1 if second time */
 	private int pageMoreRooms;
+	@Column(columnDefinition = "int default 0")
+	private int status;
 	private String intentName;
 	private String languageBot;
 	private String stationToSearch;
@@ -81,6 +83,14 @@ public class BotInformation implements Serializable {
 
 	public void setPriceToSearch(String priceToSearch) {
 		this.priceToSearch = priceToSearch;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 }
