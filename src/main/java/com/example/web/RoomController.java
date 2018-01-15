@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.entity.Candidate;
 import com.example.entity.CandidateRoomRelation;
 import com.example.entity.CandidateRoomRelationPK;
+import com.example.entity.Room;
 
 public class RoomController {
 
@@ -30,12 +31,12 @@ public class RoomController {
 	 * 
 	 */
 	@RequestMapping(value = "/applyForRoom", method = RequestMethod.POST)
-	public void applyForJob(@RequestParam(name = "idRoom") int idRoom, @RequestBody @Valid Candidate candidate)
+	public void applyForJob(@RequestBody @Valid Room room, @RequestBody @Valid Candidate candidate)
 			throws Exception {
 		CandidateRoomRelation candidateRoomRelation = new CandidateRoomRelation();
 		CandidateRoomRelationPK candidateRoomRelationPK = new CandidateRoomRelationPK();
 		candidateRoomRelationPK.setIdCandidate(candidate.getIdUserInformation());
-		candidateRoomRelationPK.setIdRoom(idRoom);
+		candidateRoomRelationPK.setIdRoom(room.getIdRoom());
 		candidateRoomRelation.setCandidateRoomRelationPK(candidateRoomRelationPK);
 		candidateRoomRelation.setApplied(true);
 		candidateRoomRelation.setAppliedDate(new Date());
