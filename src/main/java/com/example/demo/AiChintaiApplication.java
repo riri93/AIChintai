@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = { "com.example.repository" })
 @ComponentScan(basePackages = { "com.example.controller" })
 @ComponentScan(basePackages = { "com.example.tool" })
+@ComponentScan(basePackages = { "com.example.web" })
 public class AiChintaiApplication {
 
 	public static void main(String[] args) {

@@ -13,7 +13,7 @@ import com.example.entity.Room;
 
 @Repository
 @RepositoryRestResource
-public interface RoomRepository extends JpaRepository<Candidate, Serializable> {
+public interface RoomRepository extends JpaRepository<Room, Serializable> {
 
 	@Query(value = "SELECT DISTINCT(r) FROM Room r")
 	public List<Room> findRoomsByAllFields();
