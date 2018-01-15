@@ -4,15 +4,14 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.entity.Candidate;
 import com.example.entity.CandidateRoomRelation;
 import com.example.entity.CandidateRoomRelationPK;
-import com.example.entity.Room;
 
 public class RoomController {
 
@@ -30,13 +29,13 @@ public class RoomController {
 	 * @throws Exception
 	 * 
 	 */
-	@RequestMapping(value = "/applyForRoom", method = RequestMethod.POST)
-	public void applyForJob(@RequestBody @Valid Room room, @RequestBody @Valid Candidate candidate)
+	@RequestMapping(value = "/applyForRoom/{idRoom}/{idCandidate}", method = RequestMethod.POST)
+	public void applyForJob(@PathVariable int idRoom, @PathVariable int idCandidate)
 			throws Exception {
 		CandidateRoomRelation candidateRoomRelation = new CandidateRoomRelation();
 		CandidateRoomRelationPK candidateRoomRelationPK = new CandidateRoomRelationPK();
-		candidateRoomRelationPK.setIdCandidate(candidate.getIdUserInformation());
-		candidateRoomRelationPK.setIdRoom(room.getIdRoom());
+		candidateRoomRelationPK.setIdCandidate(idCandidate);
+		candidateRoomRelationPK.setIdRoom(idRoom);
 		candidateRoomRelation.setCandidateRoomRelationPK(candidateRoomRelationPK);
 		candidateRoomRelation.setApplied(true);
 		candidateRoomRelation.setAppliedDate(new Date());
