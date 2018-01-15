@@ -161,7 +161,7 @@ public class ChintaiBotController {
 		}
 
 		if (intentName.equals("Default Fallback Intent")) {
-
+		   try{
 			BotInformation botInformation = new BotInformation();
 			botInformation.setIntentName("Default Fallback Intent");
 
@@ -213,6 +213,11 @@ public class ChintaiBotController {
 				PushMessage pushMessage = new PushMessage(userId, textMessage);
 				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 			}
+		   }  catch (Exception e) {
+			 	TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+				PushMessage pushMessage = new PushMessage(userId, textMessage);
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+		   }
 		}
 
 		// search for station and display distance
