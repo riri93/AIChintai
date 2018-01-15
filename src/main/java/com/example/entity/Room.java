@@ -1,11 +1,15 @@
 package com.example.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Room implements Serializable {
@@ -26,6 +30,10 @@ public class Room implements Serializable {
 	private int keyMoney;
 	private int deposit;
 	private int insurance;
+	
+	@OneToMany(mappedBy = "room")
+	@JsonIgnoreProperties({ "candidate", "room" })
+	private List<CandidateRoomRelation> candidateRoomRelations;
 
 	public int getIdRoom() {
 		return idRoom;
@@ -105,6 +113,14 @@ public class Room implements Serializable {
 
 	public void setInsurance(int insurance) {
 		this.insurance = insurance;
+	}
+
+	public List<CandidateRoomRelation> getCandidateRoomRelations() {
+		return candidateRoomRelations;
+	}
+
+	public void setCandidateRoomRelations(List<CandidateRoomRelation> candidateRoomRelations) {
+		this.candidateRoomRelations = candidateRoomRelations;
 	}
 
 }
