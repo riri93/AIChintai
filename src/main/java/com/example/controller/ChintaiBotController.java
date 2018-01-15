@@ -568,5 +568,7 @@ public class ChintaiBotController {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 }
