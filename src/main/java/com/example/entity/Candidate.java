@@ -2,12 +2,14 @@ package com.example.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -31,6 +33,10 @@ public class Candidate extends UserInformation implements Serializable {
 	@JsonIgnoreProperties("candidate")
 	private BotInformation botInformation;
 
+	@OneToMany(mappedBy = "candidate")
+	@JsonIgnoreProperties({ "candidate", "room" })
+	private List<CandidateRoomRelation> candidateRoomRelations;
+	
 	public String getUserLineId() {
 		return userLineId;
 	}
@@ -77,6 +83,14 @@ public class Candidate extends UserInformation implements Serializable {
 
 	public void setBotInformation(BotInformation botInformation) {
 		this.botInformation = botInformation;
+	}
+
+	public List<CandidateRoomRelation> getCandidateRoomRelations() {
+		return candidateRoomRelations;
+	}
+
+	public void setCandidateRoomRelations(List<CandidateRoomRelation> candidateRoomRelations) {
+		this.candidateRoomRelations = candidateRoomRelations;
 	}
 
 }

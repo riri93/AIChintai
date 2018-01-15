@@ -1,11 +1,16 @@
 package com.example.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Room implements Serializable {
@@ -26,6 +31,14 @@ public class Room implements Serializable {
 	private int keyMoney;
 	private int deposit;
 	private int insurance;
+	@Column(precision = 10, scale = 2)
+	private Double longitudeStation;
+	@Column(precision = 10, scale = 2)
+	private Double latitudeStation;
+
+	@OneToMany(mappedBy = "room")
+	@JsonIgnoreProperties({ "candidate", "room" })
+	private List<CandidateRoomRelation> candidateRoomRelations;
 
 	public int getIdRoom() {
 		return idRoom;
@@ -105,6 +118,30 @@ public class Room implements Serializable {
 
 	public void setInsurance(int insurance) {
 		this.insurance = insurance;
+	}
+
+	public List<CandidateRoomRelation> getCandidateRoomRelations() {
+		return candidateRoomRelations;
+	}
+
+	public void setCandidateRoomRelations(List<CandidateRoomRelation> candidateRoomRelations) {
+		this.candidateRoomRelations = candidateRoomRelations;
+	}
+
+	public Double getLongitudeStation() {
+		return longitudeStation;
+	}
+
+	public void setLongitudeStation(Double longitudeStation) {
+		this.longitudeStation = longitudeStation;
+	}
+
+	public Double getLatitudeStation() {
+		return latitudeStation;
+	}
+
+	public void setLatitudeStation(Double latitudeStation) {
+		this.latitudeStation = latitudeStation;
 	}
 
 }
