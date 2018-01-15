@@ -2,13 +2,13 @@ package com.example.web;
 
 import java.util.Date;
 
-import javax.validation.Valid;
+
 
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import com.example.entity.CandidateRoomRelation;
 import com.example.entity.CandidateRoomRelationPK;
@@ -29,6 +29,7 @@ public class RoomController {
 	 * @throws Exception
 	 * 
 	 */
+
 	@RequestMapping(value = "/applyForRoom/{idRoom}/{idCandidate}", method = RequestMethod.POST)
 	public void applyForJob(@PathVariable int idRoom, @PathVariable int idCandidate)
 			throws Exception {

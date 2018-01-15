@@ -25,6 +25,7 @@ import com.example.entity.Station;
 import com.example.repository.BotInformationRepository;
 import com.example.repository.CandidateRepository;
 import com.example.repository.StationRepository;
+import com.example.tool.AsynchronousService;
 import com.example.repository.RoomRepository;
 import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.model.PushMessage;
@@ -56,8 +57,8 @@ public class ChintaiBotController {
 	@Autowired
 	RoomRepository roomRepository;
 
-	// @Autowired
-	// AsynchronousService anAsynchronousService;
+	@Autowired
+	AsynchronousService anAsynchronousService;
 
 	/**
 	 * @author Nour
@@ -531,8 +532,7 @@ public class ChintaiBotController {
 		try {
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 			/******** THREAD ***********/
-			// anAsynchronousService.executeAsynchronously(userId, "japanese",
-			// CHANNEL_ACCESS_TOKEN);
+			anAsynchronousService.executeAsynchronously(userId, "japanese", CHANNEL_ACCESS_TOKEN);
 			/****************/
 		} catch (IOException e) {
 			System.out.println("Exception is raised ");
@@ -568,7 +568,5 @@ public class ChintaiBotController {
 			e.printStackTrace();
 		}
 	}
-	
-	
 
 }

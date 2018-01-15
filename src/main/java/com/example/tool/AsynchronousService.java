@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 public class AsynchronousService {
 
 	@Autowired
-	private TaskExecutor taskExecutor;
+	TaskExecutor taskExecutor;
 
 	@Autowired
-	private ApplicationContext applicationContext;
+	ApplicationContext applicationContext;
 
-	public void executeAsynchronously(String userId, String language,String channelToken) {
+	public void executeAsynchronously(String userId, String language, String channelToken) {
 
 		MyThread myThread = applicationContext.getBean(MyThread.class);
-		myThread.setUserId(userId,language,channelToken);
+		myThread.setUserId(userId, language, channelToken);
 		taskExecutor.execute(myThread);
 	}
 
