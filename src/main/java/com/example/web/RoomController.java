@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,12 +32,12 @@ public class RoomController {
 	 * 
 	 */
 	@RequestMapping(value = "/applyForRoom", method = RequestMethod.POST)
-	public void applyForJob(@RequestBody @Valid Room room, @RequestBody @Valid Candidate candidate)
+	public void applyForJob(@PathVariable int idRoom, @RequestBody @Valid Candidate candidate)
 			throws Exception {
 		CandidateRoomRelation candidateRoomRelation = new CandidateRoomRelation();
 		CandidateRoomRelationPK candidateRoomRelationPK = new CandidateRoomRelationPK();
 		candidateRoomRelationPK.setIdCandidate(candidate.getIdUserInformation());
-		candidateRoomRelationPK.setIdRoom(room.getIdRoom());
+		candidateRoomRelationPK.setIdRoom(idRoom);
 		candidateRoomRelation.setCandidateRoomRelationPK(candidateRoomRelationPK);
 		candidateRoomRelation.setApplied(true);
 		candidateRoomRelation.setAppliedDate(new Date());
