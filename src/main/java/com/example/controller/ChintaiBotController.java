@@ -158,6 +158,7 @@ public class ChintaiBotController {
 
 				Page nearestStations;
 
+				botInformation.setStatus(1);
 				botInformation.setStationToSearch(customerMessage);
 				botInformationRepository.saveAndFlush(botInformation);
 				nearestStations = stationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
@@ -213,29 +214,84 @@ public class ChintaiBotController {
 				BotInformation botInformation = new BotInformation();
 				botInformation = candidate.getBotInformation();
 
-				String stationToSearch = "";
+				if (botInformation.getStatus() != 1) {
 
-				if (customerMessage.contains("の近くで探しています。")) {
-					stationToSearch = customerMessage.replace("の近くで探しています。", "");
+					String stationToSearch = "";
+
+					if (customerMessage.contains("の近くで探しています。")) {
+						stationToSearch = customerMessage.replace("の近くで探しています。", "");
+					}
+
+					if (customerMessage.contains("駅")) {
+						stationToSearch = stationToSearch.replace(" 駅 ", "");
+					}
+
+					botInformation.setIntentName("station");
+					botInformation.setStationToSearch(stationToSearch);
+					botInformationRepository.saveAndFlush(botInformation);
+
+					ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, "どれぐらい近いほうがいいですか？", null,
+							Arrays.asList(new MessageAction("徒歩5分以内", "徒歩5分以内 がいいです。"),
+									new MessageAction("徒歩10分以内", "徒歩10分以内 がいいです。"),
+									new MessageAction("徒歩20分以内", "徒歩20分以内 がいいです。"),
+									new MessageAction("徒歩30分以内", "徒歩30分以内 がいいです。")));
+					TemplateMessage templateMessage = new TemplateMessage("言語を選択してください。", buttonsTemplate);
+
+					PushMessage pushMessage = new PushMessage(userId, templateMessage);
+					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+				} else {
+
+					Page nearestStations;
+
+					botInformation.setStationToSearch(customerMessage);
+					botInformationRepository.saveAndFlush(botInformation);
+					nearestStations = stationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
+							new PageRequest(0, 3));
+
+					if (nearestStations.getContent().size() > 0) {
+
+						botInformationRepository.saveAndFlush(botInformation);
+						List<Action> messageActions = new ArrayList<Action>();
+						List<Object[]> nearStationObj = nearestStations.getContent();
+
+						for (Object[] ObjNearestStation : nearStationObj) {
+							Station station = stationRepository.findStationById((int) ObjNearestStation[0]);
+							String lineName = station.getLineName();
+							if (lineName.length() > 6) {
+								lineName = lineName.substring(0, 6);
+							}
+							byte[] lineNameStation = lineName.getBytes(StandardCharsets.UTF_8);
+							String lineNameJapanese = new String(lineNameStation, StandardCharsets.UTF_8);
+
+							String stationName = station.getStationName();
+							if (station.getStationName().length() > 6) {
+								stationName = station.getStationName().substring(0, 6);
+							}
+
+							byte[] b = stationName.getBytes(StandardCharsets.UTF_8); // Explicit,
+							String japanesString = new String(b, StandardCharsets.UTF_8);
+							MessageAction ma = new MessageAction(japanesString + "駅 | " + lineNameJapanese,
+									station.getStationName() + " 駅 | " + station.getLineName() + "の近くで探しています。");
+							messageActions.add(ma);
+						}
+
+						String neareststationNA = "いいえ。私が探している駅ではありません。";
+						messageActions.add(new MessageAction("違う", neareststationNA));
+						ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null,
+								botInformation.getStationToSearch() + "はこの駅のことですか？", messageActions);
+						TemplateMessage templateMessage = new TemplateMessage("駅", buttonsTemplate);
+
+						PushMessage pushMessage = new PushMessage(userId, templateMessage);
+						LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage)
+								.execute();
+
+					} else {
+						TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+						PushMessage pushMessage = new PushMessage(userId, textMessage);
+						LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage)
+								.execute();
+					}
 				}
-
-				if (customerMessage.contains("駅")) {
-					stationToSearch = stationToSearch.replace(" 駅 ", "");
-				}
-
-				botInformation.setIntentName("station");
-				botInformation.setStationToSearch(stationToSearch);
-				botInformationRepository.saveAndFlush(botInformation);
-
-				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, "どれぐらい近いほうがいいですか？", null,
-						Arrays.asList(new MessageAction("徒歩5分以内", "徒歩5分以内 がいいです。"),
-								new MessageAction("徒歩10分以内", "徒歩10分以内 がいいです。"),
-								new MessageAction("徒歩20分以内", "徒歩20分以内 がいいです。"),
-								new MessageAction("徒歩30分以内", "徒歩30分以内 がいいです。")));
-				TemplateMessage templateMessage = new TemplateMessage("言語を選択してください。", buttonsTemplate);
-
-				PushMessage pushMessage = new PushMessage(userId, templateMessage);
-				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 			}
 
 			// station not available first time intent
