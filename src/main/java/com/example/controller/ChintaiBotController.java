@@ -158,6 +158,7 @@ public class ChintaiBotController {
 			if (intentName.equals("Default Fallback Intent")) {
 
 				BotInformation botInformation = new BotInformation();
+				botInformation = candidate.getBotInformation();
 				botInformation.setIntentName("Default Fallback Intent");
 
 				Page nearestStations;
