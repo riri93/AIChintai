@@ -40,9 +40,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.example.entity.LineStation;
 import com.example.entity.NearestStation;
 import com.example.entity.Room;
-import com.example.entity.Station;
+
 import com.example.repository.RoomRepository;
-import com.example.repository.StationRepository;
+
 import com.example.service.LineStationService;
 import com.example.service.NearestStationService;
 
@@ -50,8 +50,7 @@ import com.example.service.NearestStationService;
 public class ServiceController {
 	@Autowired
 	RoomRepository roomRepository;
-	@Autowired
-	StationRepository stationRepository;
+
 	@Autowired
 	NearestStationService nearestStationService;
 	@Autowired
@@ -370,17 +369,17 @@ public class ServiceController {
 
 				}
 
-//				if (idLineStation != "" && idLineStation != null) {
-//
-//					int idRelatedLine = Integer.parseInt(idLineStation);
-//					// idRelatedLine = idRelatedLine - 1001;
-//					LineStation lineStation = new LineStation();
-//					lineStation = lineStationService.getLineStationByIdLineCD(idRelatedLine);
-//					if (lineStation != null) {
-//						nearestStation.setLineStation(lineStation);
-//					}
-//
-//				}
+				if (idLineStation != "" && idLineStation != null) {
+
+					int idRelatedLine = Integer.parseInt(idLineStation);
+					// idRelatedLine = idRelatedLine - 1001;
+					LineStation lineStation = new LineStation();
+					lineStation = lineStationService.getLineStationByIdLineCD(idRelatedLine);
+					if (lineStation != null) {
+						nearestStation.setLineStation(lineStation);
+					}
+
+				}
 
 				if (addressStation != "" && addressStation != null) {
 					nearestStation.setAddressStation(addressStation);
@@ -457,7 +456,7 @@ public class ServiceController {
 			/*******************************************/
 			String line = "";
 
-			String csvFile = "/home/djo/Téléchargements/mt_databasestation.csv";
+			String csvFile = "/home/djo/Documents/djo/csv/mt_database - line.csv";
 			BufferedReader br = null;
 			FileReader fr = null;
 			fr = new FileReader(csvFile);
