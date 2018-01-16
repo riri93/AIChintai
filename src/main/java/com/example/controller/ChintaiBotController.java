@@ -259,13 +259,9 @@ public class ChintaiBotController {
 
 				Page nearestStations;
 
-				botInformation.setStationToSearch(customerMessage);
-				botInformationRepository.saveAndFlush(botInformation);
 				nearestStations = nearestStationRepository
 						.findStations(candidate.getBotInformation().getStationToSearch(), new PageRequest(1, 3));
 
-				
-				
 				if (nearestStations.getContent().size() > 0) {
 
 					botInformationRepository.saveAndFlush(botInformation);
