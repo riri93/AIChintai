@@ -484,6 +484,11 @@ public class ChintaiBotController {
 			TextMessage textMessage = new TextMessage("ごめんなさい、わからないです。メニューをみてください。");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			
+			
+			e.printStackTrace();
+			
+			
 		}
 
 	}
