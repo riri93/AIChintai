@@ -40,20 +40,23 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.example.entity.LineStation;
 import com.example.entity.NearestStation;
 import com.example.entity.Room;
-import com.example.entity.Station;
+import com.example.repository.NearestStationRepository;
 import com.example.repository.RoomRepository;
-import com.example.repository.StationRepository;
 import com.example.service.LineStationService;
 import com.example.service.NearestStationService;
 
 @RestController
 public class ServiceController {
+	
 	@Autowired
 	RoomRepository roomRepository;
+	
 	@Autowired
-	StationRepository stationRepository;
+	NearestStationRepository nearestStationRepository;
+	
 	@Autowired
 	NearestStationService nearestStationService;
+	
 	@Autowired
 	LineStationService lineStationService;
 	

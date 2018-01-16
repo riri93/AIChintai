@@ -2,10 +2,7 @@ package com.example.service;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.NearestStation;
@@ -31,10 +28,6 @@ public class NearestStationService {
 
 	public NearestStation saveNearestStation(NearestStation nearestStation) {
 		return nearestStationRepository.save(nearestStation);
-	}
-
-	public NearestStation getNearStationByIdLineCD(int idCD) {
-		return nearestStationRepository.getNearStationByIdLineCD(idCD);
 	}
 
 	public List<NearestStation> getAllNearestStations() {

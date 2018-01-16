@@ -13,7 +13,6 @@ import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.experimental.max.MaxHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.entity.BotInformation;
 import com.example.entity.Candidate;
 import com.example.entity.Room;
-import com.example.entity.Station;
+import com.example.entity.NearestStation;
 import com.example.repository.BotInformationRepository;
 import com.example.repository.CandidateRepository;
-import com.example.repository.StationRepository;
+import com.example.repository.NearestStationRepository;
 import com.example.tool.AsynchronousService;
 import com.example.repository.RoomRepository;
 import com.linecorp.bot.client.LineMessagingServiceBuilder;
@@ -56,7 +55,7 @@ public class ChintaiBotController {
 	BotInformationRepository botInformationRepository;
 
 	@Autowired
-	StationRepository stationRepository;
+	NearestStationRepository nearestStationRepository;
 
 	@Autowired
 	RoomRepository roomRepository;
@@ -166,7 +165,7 @@ public class ChintaiBotController {
 				botInformation.setStatus(1);
 				botInformation.setStationToSearch(customerMessage);
 				botInformationRepository.saveAndFlush(botInformation);
-				nearestStations = stationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
+				nearestStations = nearestStationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
 						new PageRequest(0, 3));
 
 				if (nearestStations.getContent().size() > 0) {
@@ -176,23 +175,24 @@ public class ChintaiBotController {
 					List<Object[]> nearStationObj = nearestStations.getContent();
 
 					for (Object[] ObjNearestStation : nearStationObj) {
-						Station station = stationRepository.findStationById((int) ObjNearestStation[0]);
-						String lineName = station.getLineName();
+						NearestStation station = nearestStationRepository.findNearStationById((int) ObjNearestStation[0]);
+						String lineName = station.getLineStation().getLineNameJapanese();
 						if (lineName.length() > 6) {
 							lineName = lineName.substring(0, 6);
 						}
 						byte[] lineNameStation = lineName.getBytes(StandardCharsets.UTF_8);
 						String lineNameJapanese = new String(lineNameStation, StandardCharsets.UTF_8);
 
-						String stationName = station.getStationName();
-						if (station.getStationName().length() > 6) {
-							stationName = station.getStationName().substring(0, 6);
+						String stationName = station.getJapaneseStation();
+						if (station.getJapaneseStation().length() > 6) {
+							stationName = station.getJapaneseStation().substring(0, 6);
 						}
 
 						byte[] b = stationName.getBytes(StandardCharsets.UTF_8); // Explicit,
 						String japanesString = new String(b, StandardCharsets.UTF_8);
 						MessageAction ma = new MessageAction(japanesString + "駅 | " + lineNameJapanese,
-								station.getStationName() + " 駅 | " + station.getLineName() + "の近くで探しています。");
+								station.getJapaneseStation() + " 駅 | " + station.getLineStation().getLineNameJapanese()
+										+ "の近くで探しています。");
 						messageActions.add(ma);
 					}
 
@@ -251,7 +251,7 @@ public class ChintaiBotController {
 
 					botInformation.setStationToSearch(customerMessage);
 					botInformationRepository.saveAndFlush(botInformation);
-					nearestStations = stationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
+					nearestStations = nearestStationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
 							new PageRequest(0, 3));
 
 					if (nearestStations.getContent().size() > 0) {
@@ -261,23 +261,24 @@ public class ChintaiBotController {
 						List<Object[]> nearStationObj = nearestStations.getContent();
 
 						for (Object[] ObjNearestStation : nearStationObj) {
-							Station station = stationRepository.findStationById((int) ObjNearestStation[0]);
-							String lineName = station.getLineName();
+							NearestStation station = nearestStationRepository.findNearStationById((int) ObjNearestStation[0]);
+							String lineName = station.getLineStation().getLineNameJapanese();
 							if (lineName.length() > 6) {
 								lineName = lineName.substring(0, 6);
 							}
 							byte[] lineNameStation = lineName.getBytes(StandardCharsets.UTF_8);
 							String lineNameJapanese = new String(lineNameStation, StandardCharsets.UTF_8);
 
-							String stationName = station.getStationName();
-							if (station.getStationName().length() > 6) {
-								stationName = station.getStationName().substring(0, 6);
+							String stationName = station.getJapaneseStation();
+							if (station.getJapaneseStation().length() > 6) {
+								stationName = station.getJapaneseStation().substring(0, 6);
 							}
 
 							byte[] b = stationName.getBytes(StandardCharsets.UTF_8); // Explicit,
 							String japanesString = new String(b, StandardCharsets.UTF_8);
 							MessageAction ma = new MessageAction(japanesString + "駅 | " + lineNameJapanese,
-									station.getStationName() + " 駅 | " + station.getLineName() + "の近くで探しています。");
+									station.getJapaneseStation() + " 駅 | "
+											+ station.getLineStation().getLineNameJapanese() + "の近くで探しています。");
 							messageActions.add(ma);
 						}
 
@@ -311,7 +312,7 @@ public class ChintaiBotController {
 
 				botInformation.setStationToSearch(customerMessage);
 				botInformationRepository.saveAndFlush(botInformation);
-				nearestStations = stationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
+				nearestStations = nearestStationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
 						new PageRequest(1, 3));
 
 				if (nearestStations.getContent().size() > 0) {
@@ -321,23 +322,24 @@ public class ChintaiBotController {
 					List<Object[]> nearStationObj = nearestStations.getContent();
 
 					for (Object[] ObjNearestStation : nearStationObj) {
-						Station station = stationRepository.findStationById((int) ObjNearestStation[0]);
-						String lineName = station.getLineName();
+						NearestStation station = nearestStationRepository.findNearStationById((int) ObjNearestStation[0]);
+						String lineName = station.getLineStation().getLineNameJapanese();
 						if (lineName.length() > 6) {
 							lineName = lineName.substring(0, 6);
 						}
 						byte[] lineNameStation = lineName.getBytes(StandardCharsets.UTF_8);
 						String lineNameJapanese = new String(lineNameStation, StandardCharsets.UTF_8);
 
-						String stationName = station.getStationName();
-						if (station.getStationName().length() > 6) {
-							stationName = station.getStationName().substring(0, 6);
+						String stationName = station.getJapaneseStation();
+						if (station.getJapaneseStation().length() > 6) {
+							stationName = station.getJapaneseStation().substring(0, 6);
 						}
 
 						byte[] b = stationName.getBytes(StandardCharsets.UTF_8); // Explicit,
 						String japanesString = new String(b, StandardCharsets.UTF_8);
 						MessageAction ma = new MessageAction(japanesString + "駅 | " + lineNameJapanese,
-								station.getStationName() + " 駅 | " + station.getLineName() + "の近くで探しています。");
+								station.getJapaneseStation() + " 駅 | " + station.getLineStation().getLineNameJapanese()
+										+ "の近くで探しています。");
 						messageActions.add(ma);
 					}
 
@@ -585,8 +587,8 @@ public class ChintaiBotController {
 		System.out.println("***************stationName : " + stationName);
 		System.out.println("***************lineName : " + lineName);
 
-		Station station = new Station();
-		station = stationRepository.findStationByNameAndLine(stationName, lineName);
+		NearestStation station = new NearestStation();
+		station = nearestStationRepository.findStationByNameAndLine(stationName, lineName);
 
 		int minPrice = 0;
 		int maxPrice = 0;
@@ -691,8 +693,8 @@ public class ChintaiBotController {
 		System.out.println("***************stationName : " + stationName);
 		System.out.println("***************lineName : " + lineName);
 
-		Station station = new Station();
-		station = stationRepository.findStationByNameAndLine(stationName, lineName);
+		NearestStation station = new NearestStation();
+		station = nearestStationRepository.findStationByNameAndLine(stationName, lineName);
 
 		int minPrice = 0;
 		int maxPrice = 0;
@@ -784,7 +786,7 @@ public class ChintaiBotController {
 	 * @param nearestStation
 	 *            station chosen by user; as in origin
 	 */
-	public HashMap getRoomStationsDistanceMatrix(List<Room> roomsDistance, Station station, double minDistance,
+	public HashMap getRoomStationsDistanceMatrix(List<Room> roomsDistance, NearestStation station, double minDistance,
 			double maxDistance) {
 		HashMap<Integer, Double> jobsHashMap = new HashMap<>();
 
