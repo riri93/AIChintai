@@ -1,0 +1,699 @@
+/********Style css**************/
+
+/* Chat */
+.chat-activity-list .chat-element {
+	border-bottom: 1px solid #e7eaec;
+}
+
+.chat-element:first-child {
+	margin-top: 0;
+}
+
+.chat-element {
+	padding-bottom: 15px;
+}
+
+.chat-element, .chat-element .media {
+	margin-top: 15px;
+}
+
+.chat-element, .media-body {
+	overflow: hidden;
+}
+
+.media-body {
+	display: block;
+	width: auto;
+}
+
+.chat-element>.pull-left {
+	margin-right: 10px;
+}
+
+.chat-element img.img-circle, .dropdown-messages-box img.img-circle {
+	width: 38px;
+	height: 38px;
+}
+
+.chat-element .well {
+	border: 1px solid #e7eaec;
+	box-shadow: none;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	padding: 10px 20px;
+	font-size: 11px;
+	line-height: 16px;
+}
+
+.chat-element .actions {
+	margin-top: 10px;
+}
+
+.chat-element .photos {
+	margin: 10px 0;
+}
+
+.right.chat-element>.pull-right {
+	margin-left: 10px;
+}
+
+.chat-photo {
+	max-height: 180px;
+	border-radius: 4px;
+	overflow: hidden;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+.chat {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.chat li {
+	margin-bottom: 10px;
+	padding-bottom: 5px;
+	border-bottom: 1px dotted #B3A9A9;
+}
+
+.chat li.left .chat-body {
+	margin-left: 60px;
+}
+
+.chat li.right .chat-body {
+	margin-right: 60px;
+}
+
+.chat li .chat-body p {
+	margin: 0;
+	color: #777777;
+}
+
+.panel .slidedown .glyphicon, .chat .glyphicon {
+	margin-right: 5px;
+}
+
+.chat-panel .panel-body {
+	height: 350px;
+	overflow-y: scroll;
+}
+
+/* Chat view */
+.message-input {
+	height: 90px !important;
+}
+
+.chat-avatar {
+	white: 36px;
+	height: 36px;
+	float: left;
+	margin-right: 10px;
+}
+
+.chat-user-name {
+	padding: 10px;
+}
+
+.chat-user {
+	padding: 8px 10px;
+	border-bottom: 1px solid #e7eaec;
+}
+
+.chat-user a {
+	color: inherit;
+}
+
+.chat-view {
+	z-index: 20012;
+}
+
+.chat-users, .chat-statistic {
+	margin-left: -30px;
+}
+
+@media ( max-width : 992px) {
+	.chat-users, .chat-statistic {
+		margin-left: 0;
+	}
+}
+
+.chat-view .ibox-content {
+	padding: 0;
+}
+
+.chat-message {
+	padding: 10px 20px;
+}
+
+.message-avatar {
+	height: 48px;
+	width: 48px;
+	border: 1px solid #e7eaec;
+	border-radius: 4px;
+	margin-top: 1px;
+}
+
+.chat-discussion .chat-message.left .message-avatar {
+	float: left;
+	margin-right: 10px;
+}
+
+.chat-discussion .chat-message.right .message-avatar {
+	float: right;
+	margin-left: 10px;
+}
+
+.message {
+	background-color: #fff;
+	border: 1px solid #e7eaec;
+	text-align: left;
+	display: block;
+	padding: 10px 20px;
+	position: relative;
+	border-radius: 4px;
+}
+
+.chat-discussion .chat-message.left .message-date {
+	/*float: right;*/
+	
+}
+
+.chat-discussion .chat-message.right .message-date {
+	/*  float: left;*/
+	
+}
+
+.chat-discussion .chat-message.left .message {
+	text-align: left;
+	margin-left: 55px;
+}
+
+.chat-discussion .chat-message.right .message {
+	/*  text-align: right;
+*/
+	margin-right: 55px;
+}
+
+.message-date {
+	font-size: 10px;
+	color: #888888;
+	/*border-top: 1px solid #eee;
+  padding-top: 7px;
+  margin-top: 10px;*/
+	width: 100%;
+	display: block;
+	text-align: right;
+}
+
+.message-author {
+	border-bottom: 1px solid #eee;
+	padding-bottom: 7px;
+	margin-bottom: 10px;
+	width: 100%;
+	display: block;
+}
+
+.message-content {
+	display: block;
+	margin-top: 8px;
+	margin-bottom: 5px;
+	text-align: left;
+}
+
+.chat-discussion {
+	background: #eee;
+	padding: 15px;
+	height: 550px;
+	overflow-y: scroll;
+}
+
+.chat-users {
+	overflow-y: auto;
+	height: 400px;
+}
+
+.chat-message-form .form-group {
+	margin-bottom: 0;
+}
+
+#small-chat {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	z-index: 100;
+}
+
+#small-chat .badge {
+	position: absolute;
+	top: -3px;
+	right: -4px;
+}
+
+.open-small-chat {
+	height: 38px;
+	width: 38px;
+	display: block;
+	background: #1ab394;
+	padding: 9px 8px;
+	text-align: center;
+	color: #fff;
+	border-radius: 50%;
+}
+
+.open-small-chat:hover {
+	color: white;
+	background: #1ab394;
+}
+
+.small-chat-box {
+	display: none;
+	position: fixed;
+	bottom: 20px;
+	right: 75px;
+	background: #fff;
+	border: 1px solid #e7eaec;
+	width: 230px;
+	height: 320px;
+	border-radius: 4px;
+}
+
+.small-chat-box.ng-small-chat {
+	display: block;
+}
+
+.body-small .small-chat-box {
+	bottom: 70px;
+	right: 20px;
+}
+
+.small-chat-box.active {
+	display: block;
+}
+
+.small-chat-box .heading {
+	background: #2f4050;
+	padding: 8px 15px;
+	font-weight: bold;
+	color: #fff;
+}
+
+.small-chat-box .chat-date {
+	opacity: 0.6;
+	font-size: 10px;
+	font-weight: normal;
+}
+
+.small-chat-box .content {
+	padding: 15px 15px;
+}
+
+.small-chat-box .content .author-name {
+	font-weight: bold;
+	margin-bottom: 3px;
+	font-size: 11px;
+}
+
+.newpopover {
+	background-color: rgb(255, 255, 255);
+	border-radius: 5px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, .3);
+	box-sizing: border-box;
+	color: rgb(30, 30, 30);
+	margin-top: 10px;
+	overflow: visible;
+	width: 300px; h1 { background-color : rgb( 237, 237, 237);
+	border-bottom: 1px solid rgb(225, 225, 225);
+	font-size: 18px;
+	font-weight: normal;
+	margin: 0;
+	padding: 5px 15px;
+}
+
+p {
+	font-size: 16px;
+	padding: 0 15px;
+}
+
+}
+.newpopover.top {
+	margin-top: -10px;
+}
+
+.newpopover.right {
+	margin-left: 10px;
+}
+
+.newpopover.bottom {
+	margin-top: 10px;
+}
+
+.newpopover.left {
+	margin-left: -10px;
+}
+
+.newpopover-title {
+	margin: 0;
+	padding: 8px 14px;
+	font-size: 14px;
+	background-color: #fafafa;
+	border-bottom: 1px solid #ededed;
+	border-radius: 5px 5px 0 0;
+}
+
+.newpopover-content {
+	padding: 9px 14px;
+}
+
+.newpopover>.arrow, .newpopover>.arrow:after {
+	position: absolute;
+	display: block;
+	width: 0;
+	height: 0;
+	border-color: transparent;
+	border-style: solid;
+}
+
+.newpopover>.arrow {
+	border-width: 11px;
+}
+
+.newpopover>.arrow:after {
+	border-width: 10px;
+	content: "";
+}
+
+.newpopover.top>.arrow {
+	left: 50%;
+	margin-left: -11px;
+	border-bottom-width: 0;
+	border-top-color: #999999;
+	border-top-color: #e1e1e1;
+	bottom: -11px;
+}
+
+.newpopover.top>.arrow:after {
+	content: " ";
+	bottom: 1px;
+	margin-left: -10px;
+	border-bottom-width: 0;
+	border-top-color: #fafafa;
+}
+
+.newpopover.right>.arrow {
+	top: 50%;
+	left: -11px;
+	margin-top: -11px;
+	border-left-width: 0;
+	border-right-color: #999999;
+	border-right-color: #e1e1e1;
+}
+
+.newpopover.right>.arrow:after {
+	content: " ";
+	left: 1px;
+	bottom: -10px;
+	border-left-width: 0;
+	border-right-color: #fafafa;
+}
+
+.newpopover.bottom>.arrow {
+	left: 50%;
+	margin-left: -11px;
+	border-top-width: 0;
+	border-bottom-color: #999999;
+	border-bottom-color: #e1e1e1;
+	top: -11px;
+}
+
+.newpopover.bottom>.arrow:after {
+	content: " ";
+	top: 1px;
+	margin-left: -10px;
+	border-top-width: 0;
+	border-bottom-color: #fafafa;
+}
+
+.newpopover.left>.arrow {
+	top: 50%;
+	right: -11px;
+	margin-top: -11px;
+	border-right-width: 0;
+	border-left-color: #999999;
+	border-left-color: #e1e1e1;
+}
+
+.newpopover.left>.arrow:after {
+	content: " ";
+	right: 1px;
+	border-right-width: 0;
+	border-left-color: #fafafa;
+	bottom: -10px;
+}
+
+/* Tooltip container */
+.tooltip {
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+	/* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+	visibility: visible;
+	width: 120px;
+	background-color: #555;
+	color: #fff;
+	text-align: center;
+	padding: 5px 0;
+	border-radius: 6px;
+	/* Position the tooltip text */
+	position: absolute;
+	z-index: 1;
+	bottom: 125%;
+	left: 50%;
+	margin-left: -60px;
+	/* Fade in tooltip */
+	opacity: 0;
+	transition: opacity 1s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+	opacity: 1;
+}
+
+tip {
+	position: relative;
+}
+
+tip span {
+	display: none;
+	position: absolute;
+	top: -5px;
+	left: 60px;
+	width: 125px;
+	padding: 5px;
+	z-index: 100;
+	background: #000;
+	color: #fff;
+	-moz-border-radius: 5px;
+	/* this works only in camino/firefox */
+	-webkit-border-radius: 5px;
+	/* this is just for Safari */
+}
+
+tip span:before {
+	content: '';
+	display: block;
+	width: 0;
+	height: 0;
+	position: absolute;
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
+	border-right: 8px solid black;
+	left: -8px;
+	top: 7px;
+}
+
+a:hover.tip {
+	font-size: 99%;
+	/* this is just for IE */
+}
+
+.info-popover {
+	height: 250px;
+	margin-top: -255px;
+	position: absolute;
+	width: 400px;
+}
+
+.info-popover .inner {
+	background-color: #FFFFFF;
+	border: 1px solid #003366;
+	border-radius: 10px 10px 10px 10px;
+	height: 240px;
+	margin-top: 0;
+	width: 100%;
+}
+
+.info-popover .arrow {
+	background: url("/images/dock/popover-arrow.png") no-repeat scroll
+		center -5px transparent;
+	height: 15px;
+	position: relative;
+	width: 100%;
+	z-index: 999;
+}
+/*****************************************************************/
+.mytextStyle {
+	border: 0;
+	padding: 10px;
+	background: whitesmoke;
+}
+
+.textStyle {
+	width: 75%;
+	display: flex;
+	flex-direction: column;
+}
+
+.textStyle>p:first-of-type {
+	width: 100%;
+	margin-top: 0;
+	margin-bottom: auto;
+	line-height: 13px;
+	font-size: 12px;
+}
+
+.textStyle>p:last-of-type {
+	width: 100%;
+	text-align: right;
+	color: silver;
+	margin-bottom: -7px;
+	margin-top: auto;
+}
+
+.textStyle-l {
+	float: left;
+	padding-right: 10px;
+}
+
+.textStyle-r {
+	float: right;
+	padding-left: 10px;
+}
+
+.avatar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 25%;
+	float: left;
+	padding-right: 10px;
+}
+
+.macro {
+	margin-top: 5px;
+	width: 85%;
+	border-radius: 5px;
+	padding: 5px;
+	display: flex;
+}
+
+.msj-rta {
+	float: right;
+	background: whitesmoke;
+}
+
+.msj {
+	float: left;
+	background: white;
+}
+
+.frameStyle {
+	background: #e0e0de;
+	height: 450px;
+	overflow: hidden;
+	padding: 0;
+}
+
+.frameStyle>div:last-of-type {
+	position: absolute;
+	bottom: 5px;
+	width: 100%;
+	display: flex;
+}
+
+ulStyle {
+	width: 100%;
+	list-style-type: none;
+	padding: 18px;
+	position: absolute;
+	bottom: 32px;
+	display: flex;
+	flex- direction: column;
+}
+
+.msj:before {
+	width: 0;
+	height: 0;
+	content: "";
+	top: -5px;
+	left: -14px;
+	position: relative;
+	border-style: solid;
+	border-width: 0 13px 13px 0;
+	border-color: transparent #ffffff transparent transparent;
+}
+
+.msj-rta:after {
+	width: 0;
+	height: 0;
+	content: "";
+	top: -5px;
+	left: 14px;
+	position: relative;
+	border-style: solid;
+	border-width: 13px 13px 0 0;
+	border-color: whitesmoke transparent transparent transparent;
+}
+
+input:focus {
+	outline: none;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+	color: #d4d4d4;
+}
+
+::-moz-placeholder { /* Firefox 19+ */
+	color: #d4d4d4;
+}
+
+:-ms-input-placeholder { /* IE 10+ */
+	color: #d4d4d4;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+	color: #d4d4d4;
+}
+
+.newClassCssTest {
+	float: right;
+	background: whitesmoke;
+}

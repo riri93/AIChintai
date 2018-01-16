@@ -1,0 +1,127 @@
+<!-- Inline template with sidebar items markup and ng-directives-->
+
+<!-- START Sidebar (left)-->
+<div class="aside-inner" class="sidebar" sidebar=""
+	sidebar-anyclick-close=""
+	ng-class="{'show-scrollbar': app.layout.asideScrollbar}">
+	<!-- START sidebar nav-->
+	<ul class="nav" style="height: 100%; overflow-y: auto;">
+
+		<!-- 	<li class="nav-heading "><span
+			data-localize="sidebar.heading.HEADER">応募者リスト</span></li>    -->
+		<li><a ui-sref="app.submenu"><i class="fa fa-users"></i> <span
+				class="nav-label" ng-click="activeListCand = !activeListCand">応募者管理</span></a></li>
+		<li ng-show="activeListCand"><a data-toggle="collapse"
+			title="My-Customer" ng-click="active = !active">
+				<div class="pull-right label label-info">{{vm.CandidateAdminList().totalElements||0}}</div>
+				<em class="icon-heart"></em> <span
+				data-localize="sidebar.nav.my-customer">担当中</span>
+		</a>
+			<ul class="nav sidebar-subnav slideDown" class="slideDown"
+				ng-show="active" id="my-customer">
+				<li class="sidebar-subnav-header">担当中kljkl</li>
+				<li><input type="text"
+					ng-keydown="($event.keyCode == 13  ||$event.keyCode == 9) && vm.searchAdminByUserName();"
+					style="margin: 5px 0 5px 20px; width: 80%;"
+					ng-model="vm.searchAdminCandidate" class="form-control"
+					placeholder=""></li>
+			</ul>
+			<ul class="nav sidebar-subnav slideDown" class="slideDown"
+				ng-show="active" id="my-customer"
+				style="height: 250px; overflow-y: auto;">
+
+				<li ng-repeat="p in vm.CandidateAdminList().content track by $index"><a
+					ng-click="displayCand(p.idUser,$index,true);"
+					class="media-box p mt0"> <span style="margin-right: 15px;"
+						class="pull-right"> <span
+							class="circle circle-warning circle-lg"></span>
+					</span> <span class="pull-left"> <img
+							class="media-box-object img-circle thumb48" alt="Image"
+							ng-src="{{p.profilePicture||'app/img/user/08.jpg'}}">
+
+					</span> <!-- Contact info--> <span class="media-box-body"> <span
+							class="media-box-heading"> <strong>{{p.userName}}</strong>
+								<br> <small class="text-muted">{{p.email}}</small>
+						</span>
+					</span>
+				</a></li>
+				<li>
+					<div class="p-lg text-center">
+						<!-- Optional link to list more users-->
+						<a class="btn btn-purple btn-sm" title="See more contacts"
+							ng-click="vm.loadMoreAdminCandidate(false)"> <strong>Load
+								more..</strong>
+						</a>
+					</div>
+				</li>
+			</ul></li>
+		<li class=" " ng-show="activeListCand"><a title="All-Customer"
+			ng-click="activelist = !activelist">
+				<div class="pull-right label label-info">{{vm.CandidateList().totalElements||0}}</div>
+				<em class="icon-notebook"></em> <span
+				data-localize="sidebar.nav.all-customer">全体リスト</span>
+		</a>
+			<ul class="nav sidebar-subnav slideDown" ng-show="activelist"
+				id="all-customer">
+				<li class="sidebar-subnav-header">全体リスト</li>
+				<li><input type="text"
+					ng-keydown="($event.keyCode == 13  ||$event.keyCode == 9) && vm.searchCandByUserName();"
+					ng-model="vm.searchCandidateByName"
+					style="margin: 5px 0 5px 20px; width: 80%;" class="form-control"
+					placeholder="名前で検索"></li>
+			</ul>
+			<ul class="nav sidebar-subnav slideDown" ng-show="activelist"
+				id="all-customer" style="height: 250px; overflow-y: auto;">
+				<li ng-repeat="p in vm.CandidateList().content  track by $index"><a
+					class="media-box p mt0"
+					ng-click="displayCand(p.idUser,$index,false);"> <span
+						style="margin-right: 15px;" class="pull-right"> <span
+							class="circle circle-success circle-lg"></span>
+					</span> <span class="pull-left"> <img
+							class="media-box-object img-circle thumb48" alt="Image"
+							ng-src="{{p.profilePicture||'app/img/user/08.jpg'}}">
+					</span> <!-- Contact info--> <span class="media-box-body"> <span
+							class="media-box-heading"> <strong>{{p.userName}}</strong>
+								<br> <small class="text-muted">{{p.email}}</small>
+						</span>
+					</span>
+				</a></li>
+
+				<li>
+					<div class="p-lg text-center">
+
+						<a class="btn btn-purple btn-sm" title="See more contacts"
+							ng-click="vm.loadMoreCandidate(false)"> <strong>Load
+								more..</strong>
+						</a>
+					</div>
+				</li>
+			</ul></li>
+
+		<li><a ng-click="activeListCand = false"
+			ui-sref="app.manageProgress"><i class="fa fa-users"></i> <span
+				class="nav-label">進捗管理</span></a></li>
+
+		<li><a ng-click="activeListCand = false" ui-sref="app.manageJob"><i
+				class="fa fa-briefcase"></i> <span class="nav-label">求人管理</span></a></li>
+		<li><a ng-click="activeListCand = false" ui-sref="app.shop"><i
+				class="fa fa-briefcase"></i> <span class="nav-label">店舗管理</span></a></li>
+
+
+		<li><a ng-click="activeListCand = false" ui-sref="app.comp"><i
+				class="fa fa-institution"></i> <span class="nav-label">企業管理</span></a></li>
+		<li><a ng-click="activeListCand = false" ui-sref="app.managAlert"><i
+				class="fa fa-users"></i> <span class="nav-label">アラート管理</span></a></li>
+
+		<li><a ng-click="activeListCand = false"
+			ui-sref="app.manageAdmin"><i class="fa fa-users"></i> <span
+				class="nav-label">管理者管理</span></a></li>
+		<li><a ng-click="activeListCand = false"
+			ui-sref="app.candidateList"><i class="fa fa-users"></i> <span
+				class="nav-label">応募者リスト</span></a></li>
+
+	</ul>
+	<!-- END sidebar nav-->
+	</nav>
+</div>
+<!-- END Sidebar (left)-->

@@ -1,0 +1,132 @@
+
+.walaPop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1060;
+  display: none;
+  max-width: 276px;
+  padding: 1px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-break: auto;
+  line-height: 1.52857143;
+  text-align: left;
+  text-align: start;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  white-space: normal;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  font-size: 14px;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ccc;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+.walaPop.top {
+  margin-top: -10px;
+}
+.walaPop.right {
+  margin-left: 10px;
+}
+.walaPop.bottom {
+  margin-top: 10px;
+}
+.walaPop.left {
+  margin-left: -10px;
+}
+.walaPop-title {
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 14px;
+  background-color: #fafafa;
+  border-bottom: 1px solid #ededed;
+  border-radius: 5px 5px 0 0;
+}
+.walaPop-content {
+  padding: 9px 14px;
+}
+.walaPop > .arrow,
+.walaPop > .arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+.walaPop > .arrow {
+  border-width: 11px;
+}
+.walaPop > .arrow:after {
+  border-width: 10px;
+  content: "";
+}
+.walaPop.top > .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-bottom-width: 0;
+  border-top-color: #999999;
+  border-top-color: #e1e1e1;
+  bottom: -11px;
+}
+.walaPop.top > .arrow:after {
+  content: " ";
+  bottom: 1px;
+  margin-left: -10px;
+  border-bottom-width: 0;
+  border-top-color: #fafafa;
+}
+.walaPop.right > .arrow {
+  top: 50%;
+  left: -11px;
+  margin-top: -11px;
+  border-left-width: 0;
+  border-right-color: #999999;
+  border-right-color: #e1e1e1;
+}
+.walaPop.right > .arrow:after {
+  content: " ";
+  left: 1px;
+  bottom: -10px;
+  border-left-width: 0;
+  border-right-color: #fafafa;
+}
+.walaPop.bottom > .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-top-width: 0;
+  border-bottom-color: #999999;
+  border-bottom-color: #e1e1e1;
+  top: -11px;
+}
+.walaPop.bottom > .arrow:after {
+  content: " ";
+  top: 1px;
+  margin-left: -10px;
+  border-top-width: 0;
+  border-bottom-color: #fafafa;
+}
+.walaPop.left > .arrow {
+  top: 50%;
+  right: -11px;
+  margin-top: -11px;
+  border-right-width: 0;
+  border-left-color: #999999;
+  border-left-color: #e1e1e1;
+}
+.walaPop.left > .arrow:after {
+  content: " ";
+  right: 1px;
+  border-right-width: 0;
+  border-left-color: #fafafa;
+  bottom: -10px;
+}

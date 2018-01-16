@@ -1,0 +1,178 @@
+<style>
+.form-control {
+	box-shadow: 0 0 0 #000 !important;
+	margin-bottom: 10px;
+}
+
+.fixed-btn {
+	position: fixed;
+	bottom: 0px;
+	background: #cd1412;
+	width: 100%;
+	left: 0;
+	height: 50px;
+	color: #fff;
+	font-weight: bold;
+	background: #cd1412;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak,
+	.x-ng-cloak {
+	display: none !important;
+}
+
+.panel .panel-heading {
+	border-bottom: 0;
+	font-size: 14px;
+	background-color: #cd1412;
+	color: #fff;
+}
+</style>
+
+
+<div class="block-center ng-cloak" style="max-width: 400px;">
+	<!-- START widget-->
+	<div class=" panel
+	widget"
+		ng-controller="ApplyFormController as apply">
+		<div class="panel-body">
+			<div class="row row-table">
+
+
+				<div class="col-sm-5">
+					<div style="position: relative;">
+						<div
+							style="width: 100%; background: rgba(0, 0, 0, 0.5); position: absolute; bottom: 0; color: #fff; padding: 10px 10px 0 10px;">
+							<ul class="list-unstyled">
+								<li class="mb-sm ng-binding">{{apply.roomToPreview.nameBuilding}}</li>
+								<li class="mb-sm ng-binding">{{apply.roomToPreview.price}}
+									({{apply.roomToPreview.managementFee}})</li>
+								<li class="mb-sm ng-binding">{{apply.roomToPreview.keyMoney}}
+									| {{apply.roomToPreview.deposit}} |
+									{{apply.roomToPreview.insurance}}</li>
+								<li class="mb-sm ng-binding">{{apply.roomToPreview.detail}}</li>
+
+							</ul>
+						</div>
+						<img alt="Image" class="img-responsive"
+							ng-show="apply.roomToPreview.pictureRoom != null"
+							ng-src="http://localhost:8080/images/{{apply.roomToPreview.pictureRoom}}">
+						<img alt="Image" class="img-responsive"
+							ng-show="apply.roomToPreview.pictureRoom == null"
+							ng-src="http://localhost:8080/images/default.jpg">
+
+					</div>
+
+				</div>
+
+			</div>
+			<hr>
+		</div>
+		<form class="form-validate mb-lg" role="form" name="apply.mapForm">
+			<ul class="list-unstyled">
+				<li class="mb-sm"><em class="fa fa-map-marker fa-fw"></em>住所<br>
+
+					<div class="p-sm">
+						<button class="btn btn-default btn-block" ng-click="ShowHide()"
+							style="">open map</button>
+					</div>
+					<div ng-show="IsVisible" style="position: relative">
+						<form name="mapForm">
+							<div id="map" style="width: 100%"></div>
+							<div id="repeat"
+								ng-repeat="marker in markers | orderBy : 'title'"></div>
+						</form>
+					</div></li>
+
+			</ul>
+		</form>
+
+
+
+		<div class="panel-body">
+			<div class="row row-table">
+				<form class="form-validate mb-lg" role="form" name="apply.applyForm"
+					novalidate="" ng-submit="apply.applyForRoom()">
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">お名前*</label>
+						<div class="col-sm-10">
+							<input name="userName" type="text" placeholder="お名前を入力"
+								ng-model="apply.candidateToPreview.userName"
+								class="form-control" required><span
+								ng-show="apply.applyForm.userName.$dirty &amp;&amp; apply.applyForm.userName.$error.required"
+								style="color: red;">Name is required</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">電話番号</label>
+						<div class="col-sm-10">
+							<input name="userPhone" type="text" placeholder="電話番号を入力"
+								ng-model="apply.candidateToPreview.phone" class="form-control"
+								numbers-only required><span
+								ng-show="apply.applyForm.userPhone.$dirty &amp;&amp; apply.applyForm.userPhone.$error.required"
+								style="color: red;">Phone is required</span>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">希望日にち*</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="preferedDateCand"
+								ng-click="openBirthday()" uib-datepicker-popup
+								ng-model="apply.candidateToPreview.preferedDate"
+								is-open="popupBirthday.opened" datepicker-options="dateOptions"
+								ng-required="true" close-text="Close"
+								alt-input-formats="altInputFormats" /> <span
+								ng-show="apply.applyForm.preferedDateCand.$dirty &amp;&amp; apply.applyForm.preferedDateCand.$error.required"
+								style="color: red;">Prefered Date is required</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">希望時間帯*</label>
+						<div class="col-sm-10">
+							<ui-select ng-model="apply.candidateToPreview.preferedTime"
+								name="preferedTime"> <ui-select-match
+								placeholder="希望時間帯を選択" required>
+							{{$select.selected}} </ui-select-match> <ui-select-choices
+								repeat="time in apply.preferedTime">
+							{{level}} </ui-select-choices> </ui-select>
+							<span
+								ng-show="apply.applyForm.preferedTime.$dirty &amp;&amp; apply.applyForm.preferedTime.$error.required"
+								style="color: red;">prefered time range is required</span>
+						</div>
+					</div>
+
+					<button ng-disabled="apply.loading"
+						class="btn btn-block mt-lg fixed-btn" type="submit">
+						Apply <img ng-if="apply.loading"
+							src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+					</button>
+				</form>
+			</div>
+		</div>
+
+
+
+	</div>
+	<!-- END widget-->
+
+
+
+
+
+</div>
+
+<!-- END panel-->
+
+<div class="text-center ng-scope" style="padding-bottom: 60px;">
+	<span>&copy;</span> <span ng-bind="app.year"></span> <span>-</span> <span
+		ng-bind="app.name"></span> <br /> <span ng-bind="app.description"></span>
+
+</div>
+
+
+
+

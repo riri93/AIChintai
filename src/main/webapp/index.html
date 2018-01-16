@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="angle">
+<base href="/">
+<head>
+<!-- Google Tag Manager -->
+
+<!-- End Google Tag Manager -->
+
+
+
+<meta charset="utf-8">
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content=" 日本でアルバイトを探すなら「Find Works Japan」">
+<meta name="keywords"
+	content="app, responsive, angular, bootstrap, dashboard, admin">
+<title data-ng-bind="::pageTitle()">株式会社セントメディア - Find Works
+	Japan</title>
+<link rel="icon" href="app/img/logo.png">
+
+<link rel="stylesheet" href="app/css/bootstrap.css"
+	data-ng-if="!app.layout.isRTL">
+<link rel="stylesheet" href="app/css/bootstrap-rtl.css"
+	data-ng-if="app.layout.isRTL">
+<!-- Application styles-->
+<link rel="stylesheet" href="app/css/app.css"
+	data-ng-if="!app.layout.isRTL">
+<link rel="stylesheet" href="app/css/app-rtl.css"
+	data-ng-if="app.layout.isRTL">
+<!-- Themes-->
+<link rel="stylesheet" ng-href="{{app.layout.theme}}"
+	data-ng-if="app.layout.theme">
+<!-- FONT AWESOME-->
+<link rel="stylesheet"
+	href="vendor/fontawesome/css/font-awesome.min.css">
+<!-- SIMPLE LINE ICONS-->
+<link rel="stylesheet"
+	href="vendor/simple-line-icons/css/simple-line-icons.css">
+<!-- ANIMATE.CSS-->
+<link rel="stylesheet" href="vendor/animate.css/animate.min.css">
+<!-- WHIRL (spinners)-->
+<link rel="stylesheet" href="vendor/whirl/dist/whirl.css">
+
+<link rel="stylesheet" href="app/css/nsPopover.css">
+
+<link rel="stylesheet" href="app/css/angucomplete-alt.css">
+<!-- =============== PAGE VENDOR STYLES ===============-->
+<!-- =============== BOOTSTRAP STYLES ===============-->
+<link rel="stylesheet" href="app/css/bootstrap.css" id="bscss">
+
+<link rel="stylesheet" href="app/css/angular-popover.css">
+<!-- =============== APP STYLES ===============-->
+<link rel="stylesheet" href="app/css/app.css" id="maincss">
+<link rel="stylesheet" href="app/css/styleChat.css">
+<link rel="stylesheet" href="app/css/map.css">
+<link rel="stylesheet" href="vendor/sweetalert/dist/sweetalert.css"></link>
+
+
+<link href="vendor/select2/dist/css/ui-select.css" rel="stylesheet"
+	type="text/css">
+<style>
+.loader {
+	border: 16px solid #f3f3f3; /* Light grey */
+	border-top: 16px solid #3498db; /* Blue */
+	border-radius: 50%;
+	width: 120px;
+	height: 120px;
+	animation: spin 2s linear infinite;
+}
+
+@
+keyframes spin { 0% {
+	transform: rotate(0deg);
+}
+100%
+{
+transform
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+rotate
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(360
+deg
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+);
+}
+}
+</style>
+</head>
+
+<body
+	data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.layout.isCollapsed, 'layout-boxed' : app.layout.isBoxed, 'layout-fs': app.useFullLayout, 'hidden-footer': app.hiddenFooter, 'layout-h': app.layout.horizontal, 'aside-float': app.layout.isFloat, 'offsidebar-open': app.offsidebarOpen, 'aside-toggled': app.asideToggled, 'aside-collapsed-text': app.layout.isCollapsedText}">
+	<!-- Google Tag Manager (noscript) -->
+	
+	<!-- End Google Tag Manager (noscript) -->
+
+
+	<div data-preloader></div>
+	<div class="wrapper" data-ui-view="" data-autoscroll="false"
+		style="height: auto;"></div>
+	<!-- =============== VENDOR SCRIPTS ===============-->
+	<!-- MODERNIZR-->
+	<script src="vendor/modernizr/modernizr.custom.js"></script>
+	<!-- MATCHMEDIA POLYFILL-->
+	<script src="vendor/matchMedia/matchMedia.js"></script>
+	<script type="text/javascript" src="vendor/xlsx.core.min.js"></script>
+	<!-- -------------------------- -->
+
+
+	<!-- =============== BASE JS ===============-->
+
+
+	<script src="app/js/base.js"></script>
+
+
+	<!-- JQUERY-->
+
+	<script src="vendor/underscore-min.js"></script>
+	<!-- BOOTSTRAP-->
+	<script src="vendor/bootstrap/dist/js/bootstrap.js"></script>
+	<!-- STORAGE API-->
+	<script src="vendor/jQuery-Storage-API/jquery.storageapi.js"></script>
+	<!-- JQUERY EASING-->
+	<script src="vendor/jquery.easing/js/jquery.easing.js"></script>
+	<!-- ANIMO-->
+	<script src="vendor/animo.js/animo.js"></script>
+	<!-- SLIMSCROLL-->
+	<script src="vendor/slimScroll/jquery.slimscroll.min.js"></script>
+	<!-- SCREENFULL-->
+	<script src="vendor/screenfull/dist/screenfull.js"></script>
+	<!-- LOCALIZE-->
+	<script src="vendor/jquery-localize-i18n/dist/jquery.localize.js"></script>
+	<!-- sweetalert  script -->
+	<script src="vendor/sweetalert/dist/sweetalert.min.js"></script>
+
+	<!-- =============== PAGE VENDOR SCRIPTS ===============-->
+
+	<script type="text/javascript"
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAB79pJxNm24t0o9ag1XItLWAyA2zL9QtI&amp;libraries=places&amp;v=3"></script>
+	<script src="app/js/uploadFile/ng-file-upload-shim.js"></script>
+	<script src="app/js/uploadFile/ng-file-upload.js"></script>
+	<script src="app/js/uploadFile/ng-file-upload-shim.min.js"></script>
+	<script src="app/js/uploadFile/ng-file-upload.min.js"></script>
+	<script src="vendor/select2/dist/js/ui-select.js"></script>
+	<script src="app/js/Directive/angucomplete-alt.js"></script>
+	<script src="app/js/Directive/angular-popover.js"></script>
+	<script src="app/js/Directive/angular-datepicker.js"></script>
+	<script src="app/js/app.js" charset="UTF-8"></script>
+	<script src="app/js/Directive/loadBar.js"></script>
+	<script src="app/js/Service/RoomService.js"></script>
+
+	<script src="app/js/Controller/ApplyController.js" charset=utf-8></script>
+	
+
+	<script src="app/js/Directive/googleMapAddress.js"></script>
+
+	<script
+		src="app/js/node_modules/angular-smart-table/dist/smart-table.js"></script>
+</body>
+
+</html>
