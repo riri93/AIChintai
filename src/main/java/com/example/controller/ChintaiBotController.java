@@ -364,26 +364,26 @@ public class ChintaiBotController {
 			// if user select the distance
 			if (intentName.equals("distance")) {
 				String distanceToSearch = "";
-				if (parameters != null) {
-					if (parameters.getString("distance") != null && !parameters.getString("distance").equals("")) {
-						distanceToSearch = parameters.getString("distance");
-						BotInformation botInformation = new BotInformation();
-						botInformation = candidate.getBotInformation();
-						botInformation.setDistanceToSearch(distanceToSearch);
-						botInformationRepository.saveAndFlush(botInformation);
 
-						ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "家賃はいくらがいいですか？",
-								Arrays.asList(new MessageAction("5万円未満", "5万円未満 がいいです。"),
-										new MessageAction("7万円未満", "7万円未満 がいいです。"),
-										new MessageAction("10万円未満", "10万円未満 がいいです。"),
-										new MessageAction("10万円以上", "10万円以上 がいいです。")));
-						TemplateMessage templateMessage = new TemplateMessage("家賃はいくらがいいですか？", buttonsTemplate);
-
-						PushMessage pushMessage = new PushMessage(userId, templateMessage);
-						LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage)
-								.execute();
-					}
+				if (customerMessage.contains("がいいです。")) {
+					distanceToSearch = customerMessage.replace(" がいいです。", "");
 				}
+
+				System.out.println("*****************distanceToSearch : " + distanceToSearch);
+
+				BotInformation botInformation = new BotInformation();
+				botInformation = candidate.getBotInformation();
+				botInformation.setDistanceToSearch(distanceToSearch);
+				botInformationRepository.saveAndFlush(botInformation);
+
+				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "家賃はいくらがいいですか？", Arrays.asList(
+						new MessageAction("5万円未満", "5万円未満 がいいです。"), new MessageAction("7万円未満", "7万円未満 がいいです。"),
+						new MessageAction("10万円未満", "10万円未満 がいいです。"), new MessageAction("10万円以上", "10万円以上 がいいです。")));
+				TemplateMessage templateMessage = new TemplateMessage("家賃はいくらがいいですか？", buttonsTemplate);
+
+				PushMessage pushMessage = new PushMessage(userId, templateMessage);
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+
 			}
 
 			// if nearest station is not available again
