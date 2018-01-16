@@ -598,6 +598,8 @@ public class ChintaiBotController {
 
 		roomsHashMap = getRoomStationsDistanceMatrix(roomsDistance, station, minDistance, maxDistance);
 
+		System.out.println("*********roomsHashMap : " + roomsHashMap.size());
+
 		Iterator<Map.Entry<Integer, Double>> entriesSorted = roomsHashMap.entrySet().iterator();
 		while (entriesSorted.hasNext()) {
 			Map.Entry<Integer, Double> entry = entriesSorted.next();
