@@ -787,6 +787,9 @@ public class ChintaiBotController {
 					d = Math.pow(d, 2) + Math.pow(height, 2);
 
 					double distance = Math.sqrt(d);
+
+					System.out.println("****************DISTANCESSSSSSSSSSS************** : " + distance);
+
 					if (distance >= minDistance && distance <= maxDistance) {
 						jobsHashMap.put(room.getIdRoom(), distance);
 					}
