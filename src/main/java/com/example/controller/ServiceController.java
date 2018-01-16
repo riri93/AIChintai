@@ -41,6 +41,8 @@ import com.example.entity.LineStation;
 import com.example.entity.NearestStation;
 import com.example.entity.Room;
 
+import com.example.repository.NearestStationRepository;
+
 import com.example.repository.RoomRepository;
 
 import com.example.service.LineStationService;
@@ -48,17 +50,23 @@ import com.example.service.NearestStationService;
 
 @RestController
 public class ServiceController {
+
 	@Autowired
 	RoomRepository roomRepository;
 
 	@Autowired
+	NearestStationRepository nearestStationRepository;
+
+	@Autowired
 	NearestStationService nearestStationService;
+
 	@Autowired
 	LineStationService lineStationService;
-	
+
 	public JSONObject stationService(String postcode) throws JSONException {
 
-		String baseURL = "https://maps.googleapis.com/maps/api/geocode/json?address="+postcode+"&key=AIzaSyBMuLYCug0drD2cEY0MuutYszCGnac3nLQ";
+		String baseURL = "https://maps.googleapis.com/maps/api/geocode/json?address=" + postcode
+				+ "&key=AIzaSyBMuLYCug0drD2cEY0MuutYszCGnac3nLQ";
 
 		System.out.println("***********URL************* " + baseURL);
 
@@ -86,6 +94,7 @@ public class ServiceController {
 		return jsonarr.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
 
 	}
+
 	/****************************************************************/
 	/**
 	 * @author Wala Ben Amor
@@ -98,7 +107,6 @@ public class ServiceController {
 		try {
 
 			String line = "";
-
 
 			String csvFile = "/home/djo/Téléchargements/aichintai-Rooms.csv";
 			BufferedReader br = null;
@@ -187,7 +195,7 @@ public class ServiceController {
 
 				}
 				if (post_code != "" && post_code != null) {
-					JSONObject latLong=stationService(post_code);
+					JSONObject latLong = stationService(post_code);
 					room.setLatitudeRoom(latLong.getDouble("lat"));
 					room.setLongitudeRoom(latLong.getDouble("lng"));
 					room.setPostCode(post_code);
@@ -240,7 +248,6 @@ public class ServiceController {
 		}
 	}
 
-	
 	/***********************************************************/
 	/**
 	 * @author Wala Ben Amor
@@ -251,12 +258,10 @@ public class ServiceController {
 	@RequestMapping(value = "/uploadstation", method = RequestMethod.GET)
 	public void uploadNearStationsFile() {
 		try {
-	
+
 			/*******************************************/
 			String line = "";
 
-	
-			
 			String csvFile = "/home/djo/Téléchargements/mt_databasestation.csv";
 			BufferedReader br = null;
 			FileReader fr = null;
@@ -428,19 +433,6 @@ public class ServiceController {
 		}
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/**********************************************************************/
 	/**
 	 * @author Wala Ben Amor
@@ -451,7 +443,6 @@ public class ServiceController {
 	@RequestMapping(value = "/api/uploadLineStationFile", method = RequestMethod.GET)
 	public void uploadLineStationFile() {
 		try {
-			
 
 			/*******************************************/
 			String line = "";
@@ -462,7 +453,7 @@ public class ServiceController {
 			fr = new FileReader(csvFile);
 			br = new BufferedReader(fr);
 			br.readLine();
-			
+
 			br.readLine();
 			System.out.println("----------START---LINE--------");
 			int i = 1;
@@ -574,5 +565,5 @@ public class ServiceController {
 			System.out.println("----LineStation------CLOSE-----Exception------");
 		}
 	}
-	
+
 }
