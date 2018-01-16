@@ -400,24 +400,26 @@ public class ChintaiBotController {
 
 			// if the user choose a price
 			if (intentName.equals("price")) {
-				if (parameters != null) {
-					if (parameters.getString("price") != null && !parameters.getString("price").equals("")) {
-						String priceToSearch = parameters.getString("price");
-						BotInformation botInformation = new BotInformation();
-						botInformation = candidate.getBotInformation();
-						botInformation.setPriceToSearch(priceToSearch);
-						botInformationRepository.saveAndFlush(botInformation);
-
-						TextMessage textMessage = new TextMessage("分かりました。今探してみますね。");
-						PushMessage pushMessage = new PushMessage(userId, textMessage);
-						LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage)
-								.execute();
-
-						/********** Search for Rooms ************/
-						searchRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp);
-						/**********************/
-					}
+				String priceToSearch = "";
+				if (customerMessage.contains("がいいです。")) {
+					priceToSearch = customerMessage.replace(" がいいです。", "");
 				}
+
+				System.out.println("*****************priceToSearch : " + priceToSearch);
+
+				BotInformation botInformation = new BotInformation();
+				botInformation = candidate.getBotInformation();
+				botInformation.setPriceToSearch(priceToSearch);
+				botInformationRepository.saveAndFlush(botInformation);
+
+				TextMessage textMessage = new TextMessage("分かりました。今探してみますね。");
+				PushMessage pushMessage = new PushMessage(userId, textMessage);
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+
+				/********** Search for Rooms ************/
+				searchRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp);
+				/**********************/
+
 			}
 
 			// if the user choose its good rooms
