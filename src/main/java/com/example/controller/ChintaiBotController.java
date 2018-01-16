@@ -458,7 +458,7 @@ public class ChintaiBotController {
 
 			String title = "";
 
-			String img = "https://cdn2.iconfinder.com/data/icons/employment-business/256/Job_Search-512.png";
+			String img = "http://danvillearearentals.com/wp-content/uploads/2014/11/House-for-Rent.jpg";
 
 			title = room.getNameBuilding();
 
