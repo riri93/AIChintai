@@ -146,6 +146,7 @@ public class ChintaiBotController {
 
 			// create bot information of null
 			if (candidate.getBotInformation() == null) {
+				System.out.println("*****create botInformation********");
 				BotInformation botInformation = new BotInformation();
 				botInformation.setIntentName("search room");
 				botInformationRepository.saveAndFlush(botInformation);
@@ -157,15 +158,13 @@ public class ChintaiBotController {
 			// searching station intent
 			if (intentName.equals("Default Fallback Intent")) {
 
-				BotInformation botInformation = new BotInformation();
-				botInformation = candidate.getBotInformation();
+				BotInformation botInformation = candidate.getBotInformation();
 				botInformation.setIntentName("Default Fallback Intent");
-
-				Page nearestStations;
-
 				botInformation.setStatus(1);
 				botInformation.setStationToSearch(customerMessage);
 				botInformationRepository.saveAndFlush(botInformation);
+
+				Page nearestStations;
 
 				System.out.println("********************customerMessage********************************"
 						+ candidate.getBotInformation().getStationToSearch());
@@ -176,7 +175,6 @@ public class ChintaiBotController {
 
 				if (nearestStations.getContent().size() > 0) {
 
-					botInformationRepository.saveAndFlush(botInformation);
 					List<Action> messageActions = new ArrayList<Action>();
 					List<Object[]> nearStationObj = nearestStations.getContent();
 
