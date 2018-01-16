@@ -447,9 +447,14 @@ public class ChintaiBotController {
 	 */
 	public void sendCarouselRooms(Candidate candidate, String userId, String CHANNEL_ACCESS_TOKEN, String timestamp,
 			List<Room> rooms) throws IOException, JSONException {
+
+		System.out.println("*******************CAROUSEL*********************");
+		System.out.println("*****************ROOM SIZE: " + rooms.size());
 		java.util.List<CarouselColumn> columns = new ArrayList<CarouselColumn>();
 
 		for (Room room : rooms) {
+
+			System.out.println("************ROOM: " + room.getIdRoom());
 
 			String title = "";
 
@@ -471,6 +476,7 @@ public class ChintaiBotController {
 			}
 			byte[] labelToByte = textToSend.getBytes(StandardCharsets.UTF_8); // Explicit,
 			textToSend = new String(labelToByte, StandardCharsets.UTF_8);
+
 			/**************************/
 
 			System.out.println("title : " + title);
@@ -486,7 +492,7 @@ public class ChintaiBotController {
 			// URIAction uriAction1 = new URIAction(detail, link);
 			// MessageAction messageAction1 = new MessageAction(detail, "月" +
 			// room.getPrice() + "円");
-			
+
 			MessageAction messageAction = new MessageAction(option, "詳細をみる");
 
 			CarouselColumn column = new CarouselColumn(img, title, textToSend, Arrays.asList(messageAction));
