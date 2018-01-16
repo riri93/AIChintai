@@ -63,6 +63,23 @@ public class ServiceController {
 	@Autowired
 	LineStationService lineStationService;
 
+	/****************************************************************/
+	/**
+	 * @author Wala Ben Amor
+	 * 
+	 *         Method to upload the room csv file
+	 * @param request
+	 */
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+
+	public String test() {
+		Page nearestStations;
+		nearestStations = nearestStationRepository.findStations("shin", new PageRequest(0, 3));
+		System.out.println("**************************************"+nearestStations.getSize());
+		return "rererr";
+
+	}
+
 	public JSONObject stationService(String postcode) throws JSONException {
 
 		String baseURL = "https://maps.googleapis.com/maps/api/geocode/json?address=" + postcode

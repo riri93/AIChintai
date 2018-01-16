@@ -165,8 +165,13 @@ public class ChintaiBotController {
 				botInformation.setStatus(1);
 				botInformation.setStationToSearch(customerMessage);
 				botInformationRepository.saveAndFlush(botInformation);
+
+				System.out.println("********************customerMessage********************************"
+						+ candidate.getBotInformation().getStationToSearch());
 				nearestStations = nearestStationRepository
 						.findStations(candidate.getBotInformation().getStationToSearch(), new PageRequest(0, 3));
+				System.out.println("********************nearestStations********************************"
+						+ nearestStations.getContent().size());
 
 				if (nearestStations.getContent().size() > 0) {
 
@@ -484,11 +489,9 @@ public class ChintaiBotController {
 			TextMessage textMessage = new TextMessage("ごめんなさい、わからないです。メニューをみてください。");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
-			
-			
+
 			e.printStackTrace();
-			
-			
+
 		}
 
 	}
