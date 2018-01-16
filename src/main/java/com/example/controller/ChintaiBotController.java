@@ -422,16 +422,7 @@ public class ChintaiBotController {
 
 			}
 
-			// if the user choose its good rooms
-			if (intentName.equals("its good rooms")) {
-				TextMessage textMessage = new TextMessage("ありがとうございます！");
-				PushMessage pushMessage = new PushMessage(userId, textMessage);
-				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
-			}
-
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			TextMessage textMessage = new TextMessage("ごめんなさい、わからないです。メニューをみてください。");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
