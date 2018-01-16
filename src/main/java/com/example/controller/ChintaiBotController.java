@@ -165,8 +165,8 @@ public class ChintaiBotController {
 				botInformation.setStatus(1);
 				botInformation.setStationToSearch(customerMessage);
 				botInformationRepository.saveAndFlush(botInformation);
-				nearestStations = nearestStationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
-						new PageRequest(0, 3));
+				nearestStations = nearestStationRepository
+						.findStations(candidate.getBotInformation().getStationToSearch(), new PageRequest(0, 3));
 
 				if (nearestStations.getContent().size() > 0) {
 
@@ -175,7 +175,8 @@ public class ChintaiBotController {
 					List<Object[]> nearStationObj = nearestStations.getContent();
 
 					for (Object[] ObjNearestStation : nearStationObj) {
-						NearestStation station = nearestStationRepository.findNearStationById((int) ObjNearestStation[0]);
+						NearestStation station = nearestStationRepository
+								.findNearStationById((int) ObjNearestStation[0]);
 						String lineName = station.getLineStation().getLineNameJapanese();
 						if (lineName.length() > 6) {
 							lineName = lineName.substring(0, 6);
@@ -251,8 +252,8 @@ public class ChintaiBotController {
 
 					botInformation.setStationToSearch(customerMessage);
 					botInformationRepository.saveAndFlush(botInformation);
-					nearestStations = nearestStationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
-							new PageRequest(0, 3));
+					nearestStations = nearestStationRepository
+							.findStations(candidate.getBotInformation().getStationToSearch(), new PageRequest(0, 3));
 
 					if (nearestStations.getContent().size() > 0) {
 
@@ -261,7 +262,8 @@ public class ChintaiBotController {
 						List<Object[]> nearStationObj = nearestStations.getContent();
 
 						for (Object[] ObjNearestStation : nearStationObj) {
-							NearestStation station = nearestStationRepository.findNearStationById((int) ObjNearestStation[0]);
+							NearestStation station = nearestStationRepository
+									.findNearStationById((int) ObjNearestStation[0]);
 							String lineName = station.getLineStation().getLineNameJapanese();
 							if (lineName.length() > 6) {
 								lineName = lineName.substring(0, 6);
@@ -312,8 +314,8 @@ public class ChintaiBotController {
 
 				botInformation.setStationToSearch(customerMessage);
 				botInformationRepository.saveAndFlush(botInformation);
-				nearestStations = nearestStationRepository.findStations(candidate.getBotInformation().getStationToSearch(),
-						new PageRequest(1, 3));
+				nearestStations = nearestStationRepository
+						.findStations(candidate.getBotInformation().getStationToSearch(), new PageRequest(1, 3));
 
 				if (nearestStations.getContent().size() > 0) {
 
@@ -322,7 +324,8 @@ public class ChintaiBotController {
 					List<Object[]> nearStationObj = nearestStations.getContent();
 
 					for (Object[] ObjNearestStation : nearStationObj) {
-						NearestStation station = nearestStationRepository.findNearStationById((int) ObjNearestStation[0]);
+						NearestStation station = nearestStationRepository
+								.findNearStationById((int) ObjNearestStation[0]);
 						String lineName = station.getLineStation().getLineNameJapanese();
 						if (lineName.length() > 6) {
 							lineName = lineName.substring(0, 6);
@@ -414,7 +417,7 @@ public class ChintaiBotController {
 			// if user select the distance
 			if (intentName.equals("distance")) {
 				String distanceToSearch = "";
-				if (parameters != null && !parameters.equals("")) {
+				if (parameters != null) {
 					if (parameters.getString("distance") != null && !parameters.getString("distance").equals("")) {
 						distanceToSearch = parameters.getString("distance");
 						BotInformation botInformation = new BotInformation();
