@@ -487,7 +487,7 @@ public class ChintaiBotController {
 
 			String detail = "Detail";
 
-			String option = "Option";
+			String option = "詳細をみる";
 
 			// String link = "月" + room.getPrice() + "円";
 
