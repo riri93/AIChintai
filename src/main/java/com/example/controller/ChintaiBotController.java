@@ -619,10 +619,20 @@ public class ChintaiBotController {
 			}
 		}
 
-		try {
-			sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
-		} catch (IOException | JSONException e) {
-			e.printStackTrace();
+		if (rooms != null && rooms.size() != 0) {
+			try {
+				sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
+			} catch (IOException | JSONException e) {
+				e.printStackTrace();
+			}
+		} else {
+			TextMessage textMessage = new TextMessage("Sorry, there are no matched rooms.");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			try {
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -728,10 +738,20 @@ public class ChintaiBotController {
 			}
 		}
 
-		try {
-			sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
-		} catch (IOException | JSONException e) {
-			e.printStackTrace();
+		if (rooms != null && rooms.size() != 0) {
+			try {
+				sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
+			} catch (IOException | JSONException e) {
+				e.printStackTrace();
+			}
+		} else {
+			TextMessage textMessage = new TextMessage("Sorry, there are no matched rooms.");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			try {
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
