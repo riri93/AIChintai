@@ -19,5 +19,9 @@ public interface CandidateRepository extends JpaRepository<Candidate, Serializab
 
 	@Query(value = "select c from Candidate c where c.botInformation.idBotInformation =:idBotInformation")
 	public Candidate findCandidateByIdBotInformation(@Param("idBotInformation") int idBotInformation);
+	
+	
+	@Query(value = "select s from Candidate s where s.idUserInformation =:idUserInformation")
+	public Candidate findCandidateById(@Param("idUserInformation") int idUserInformation);
 
 }
