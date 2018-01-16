@@ -34,9 +34,9 @@ public class Room implements Serializable {
 	private int insurance;
 	
 	@Column(precision = 10, scale = 2)
-	private Double longitudeStation;
+	private Double longitudeRoom;
 	@Column(precision = 10, scale = 2)
-	private Double latitudeStation;
+	private Double latitudeRoom;
 
 	@OneToMany(mappedBy = "room")
 	@JsonIgnoreProperties({ "candidate", "room" })
@@ -130,20 +130,20 @@ public class Room implements Serializable {
 		this.candidateRoomRelations = candidateRoomRelations;
 	}
 
-	public Double getLongitudeStation() {
-		return longitudeStation;
+	public Double getLongitudeRoom() {
+		return longitudeRoom;
 	}
 
-	public void setLongitudeStation(Double longitudeStation) {
-		this.longitudeStation = longitudeStation;
+	public void setLongitudeRoom(Double longitudeRoom) {
+		this.longitudeRoom = longitudeRoom;
 	}
 
-	public Double getLatitudeStation() {
-		return latitudeStation;
+	public Double getLatitudeRoom() {
+		return latitudeRoom;
 	}
 
-	public void setLatitudeStation(Double latitudeStation) {
-		this.latitudeStation = latitudeStation;
+	public void setLatitudeRoom(Double latitudeRoom) {
+		this.latitudeRoom = latitudeRoom;
 	}
 
 	public String getPictureRoom() {
