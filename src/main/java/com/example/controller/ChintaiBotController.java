@@ -284,7 +284,7 @@ public class ChintaiBotController {
 							String japanesString = new String(b, StandardCharsets.UTF_8);
 							MessageAction ma = new MessageAction(japanesString + "駅 | " + lineNameJapanese,
 									station.getJapaneseStation() + " 駅 | "
-											+ station.getLineStation().getLineNameJapanese() + "の近くで探しています。");
+											+ station.getLineStation().getLineNameJapanese() + " の近くで探しています。");
 							messageActions.add(ma);
 						}
 
@@ -346,7 +346,7 @@ public class ChintaiBotController {
 						String japanesString = new String(b, StandardCharsets.UTF_8);
 						MessageAction ma = new MessageAction(japanesString + "駅 | " + lineNameJapanese,
 								station.getJapaneseStation() + " 駅 | " + station.getLineStation().getLineNameJapanese()
-										+ "の近くで探しています。");
+										+ " の近くで探しています。");
 						messageActions.add(ma);
 					}
 
