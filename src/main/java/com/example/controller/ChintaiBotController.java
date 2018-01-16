@@ -171,7 +171,7 @@ public class ChintaiBotController {
 						.findStations(candidate.getBotInformation().getStationToSearch(), new PageRequest(0, 3));
 				System.out.println("********************nearestStations********************************"
 						+ nearestStations.getContent().size());
-
+				System.out.println("********** TOTAL PAGES *********** " + nearestStations.getTotalPages());
 				if (nearestStations.getContent().size() > 0) {
 
 					List<Action> messageActions = new ArrayList<Action>();
@@ -264,6 +264,8 @@ public class ChintaiBotController {
 				nearestStations = nearestStationRepository
 						.findStations(candidate.getBotInformation().getStationToSearch(), new PageRequest(1, 3));
 
+				
+				
 				if (nearestStations.getContent().size() > 0) {
 
 					botInformationRepository.saveAndFlush(botInformation);
