@@ -238,7 +238,7 @@ public class ChintaiBotController {
 				botInformation.setStationToSearch(stationToSearch);
 				botInformationRepository.saveAndFlush(botInformation);
 
-				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, "どれぐらい近いほうがいいですか？", null,
+				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "どれぐらい近いほうがいいですか？",
 						Arrays.asList(new MessageAction("徒歩5分以内", "徒歩5分以内 がいいです。"),
 								new MessageAction("徒歩10分以内", "徒歩10分以内 がいいです。"),
 								new MessageAction("徒歩20分以内", "徒歩20分以内 がいいです。"),
@@ -372,7 +372,7 @@ public class ChintaiBotController {
 						botInformation.setDistanceToSearch(distanceToSearch);
 						botInformationRepository.saveAndFlush(botInformation);
 
-						ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, "家賃はいくらがいいですか？", null,
+						ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "家賃はいくらがいいですか？",
 								Arrays.asList(new MessageAction("5万円未満", "5万円未満 がいいです。"),
 										new MessageAction("7万円未満", "7万円未満 がいいです。"),
 										new MessageAction("10万円未満", "10万円未満 がいいです。"),
