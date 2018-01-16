@@ -18,6 +18,9 @@ public interface RoomRepository extends JpaRepository<Room, Serializable> {
 	@Query(value = "SELECT DISTINCT(r) FROM Room r")
 	public List<Room> findRoomsByAllFields();
 
+	@Query(value = "select r from Room r where r.idRoom =:idRoom")
+	public Room findRoomById(@Param("idRoom") int idRoom);
+
 	@Query(value = "SELECT DISTINCT(r) FROM Room r where r.price>=:minPrice and r.price<=:maxPrice")
 	public List<Room> findRoomsByPrice(@Param("minPrice") int minPrice, @Param("maxPrice") int maxPrice);
 

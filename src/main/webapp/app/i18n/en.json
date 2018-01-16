@@ -1,0 +1,48 @@
+{
+	"dashboard": {
+		"WELCOME": "Welcome to {{appName}}"
+	},
+	"topbar": {
+		"search": {
+			"PLACEHOLDER": "Type and hit enter.."
+		}
+	},
+	"sidebar": {
+		"WELCOME": "Welcome",
+		"heading": {
+			"HEADER": "Main Navigation"
+		},
+		"nav": {
+			"SINGLEVIEW": "Single View",
+			"menu": {
+				"MENU": "Menu",
+				"SUBMENU": "Sub Menu"
+			}
+		}
+	},
+	"nameCnadidate": "Name",
+	"birthday": "Birthday",
+	"yourPhone": "Your phone",
+	"durationInJapan": "Duration In Japan",
+	"namePlaceholder": "enter your name",
+	"phonePlaceholder": "enter your phone",
+	"selectLevel": "select your JLPT level",
+	"selectDurationInJapan": "select your duration in japan",
+	"backToLine": "Back to line",
+	"details": "Details",
+	"youhavealreadyappliedforthiscompany": "You have already applied for this company! ",
+	"shopName": "Shop Name",
+	"address": "Address",
+	"phone": "Phone",
+	"position": "Position",
+	"hourlyWage": "Hourly Wage",
+	"workShift": "Work Shift",
+	"durationRequirement": "Duration Requirement",
+	"interview": "Interview",
+	"venue": "Venue",
+	"date": "Date",
+	"transportationFee": "Transportation Fee",
+	"requirement": "Requirement",
+	"shopAddress": "Shop Address",
+	"openMap" : "Open Map"
+}

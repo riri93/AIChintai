@@ -27,6 +27,9 @@ public class Candidate extends UserInformation implements Serializable {
 	private Date birthday;
 	private String jLPT;
 	private String durationInJapan;
+	private Date preferedDate;
+	private String preferedTime;
+	
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "idBotInformation", referencedColumnName = "idBotInformation")
@@ -91,6 +94,22 @@ public class Candidate extends UserInformation implements Serializable {
 
 	public void setCandidateRoomRelations(List<CandidateRoomRelation> candidateRoomRelations) {
 		this.candidateRoomRelations = candidateRoomRelations;
+	}
+
+	public Date getPreferedDate() {
+		return preferedDate;
+	}
+
+	public void setPreferedDate(Date preferedDate) {
+		this.preferedDate = preferedDate;
+	}
+
+	public String getPreferedTime() {
+		return preferedTime;
+	}
+
+	public void setPreferedTime(String preferedTime) {
+		this.preferedTime = preferedTime;
 	}
 
 }

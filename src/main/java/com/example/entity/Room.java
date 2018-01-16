@@ -26,11 +26,13 @@ public class Room implements Serializable {
 	private String nameBuilding;
 	private String postCode;
 	private String detail;
+	private String pictureRoom;
 	private int price;
 	private int managementFee;
 	private int keyMoney;
 	private int deposit;
 	private int insurance;
+	
 	@Column(precision = 10, scale = 2)
 	private Double longitudeRoom;
 	@Column(precision = 10, scale = 2)
@@ -142,6 +144,14 @@ public class Room implements Serializable {
 
 	public void setLatitudeRoom(Double latitudeRoom) {
 		this.latitudeRoom = latitudeRoom;
+	}
+
+	public String getPictureRoom() {
+		return pictureRoom;
+	}
+
+	public void setPictureRoom(String pictureRoom) {
+		this.pictureRoom = pictureRoom;
 	}
 
 }
