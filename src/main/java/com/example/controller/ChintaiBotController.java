@@ -462,7 +462,7 @@ public class ChintaiBotController {
 
 			String title = "";
 
-			String img = null;
+			String img = "http://www.talkradio1370.com/.a/6a00e54f0c96dd883401b8d2a42711970c-pi";
 
 			title = room.getNameBuilding();
 
