@@ -464,7 +464,7 @@ public class ChintaiBotController {
 			title = new String(titleByte, StandardCharsets.UTF_8);
 
 			/*************************/
-			String textToSend = room.getNameBuilding() + " | " + room.getPostCode();
+			String textToSend = "月" + room.getPrice() + "円";
 
 			if (textToSend.length() > 59) {
 				textToSend = textToSend.substring(0, 59);
@@ -473,6 +473,10 @@ public class ChintaiBotController {
 			textToSend = new String(labelToByte, StandardCharsets.UTF_8);
 			/**************************/
 
+			System.out.println("title : " + title);
+			System.out.println("textToSend : " + textToSend);
+			System.out.println("img : " + img);
+
 			String detail = "Detail";
 
 			String option = "Option";
@@ -480,11 +484,12 @@ public class ChintaiBotController {
 			// String link = "月" + room.getPrice() + "円";
 
 			// URIAction uriAction1 = new URIAction(detail, link);
-			MessageAction messageAction1 = new MessageAction(detail, "月" + room.getPrice() + "円");
-			MessageAction messageAction2 = new MessageAction(option, "詳細をみる");
+			// MessageAction messageAction1 = new MessageAction(detail, "月" +
+			// room.getPrice() + "円");
+			
+			MessageAction messageAction = new MessageAction(option, "詳細をみる");
 
-			CarouselColumn column = new CarouselColumn(img, title, textToSend,
-					Arrays.asList(messageAction1, messageAction2));
+			CarouselColumn column = new CarouselColumn(img, title, textToSend, Arrays.asList(messageAction));
 			columns.add(column);
 		}
 
