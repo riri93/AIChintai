@@ -291,7 +291,7 @@ public class ChintaiBotController {
 						messageActions.add(ma);
 					}
 
-					String neareststationNA = "いいえ。私が探している駅ではありません再び 。";
+					String neareststationNA = "いいえ。これらも私が探している駅ではありません。";
 					messageActions.add(new MessageAction("違う", neareststationNA));
 					ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null,
 							botInformation.getStationToSearch() + "はこの駅のことですか？", messageActions);
