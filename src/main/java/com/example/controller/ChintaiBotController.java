@@ -291,7 +291,7 @@ public class ChintaiBotController {
 						messageActions.add(ma);
 					}
 
-					String neareststationNA = "いいえ。私が探している駅ではありません再び 。";
+					String neareststationNA = "いいえ。これらも私が探している駅ではありません。";
 					messageActions.add(new MessageAction("違う", neareststationNA));
 					ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null,
 							botInformation.getStationToSearch() + "はこの駅のことですか？", messageActions);
@@ -367,8 +367,6 @@ public class ChintaiBotController {
 					distanceToSearch = customerMessage.replace(" がいいです。", "");
 				}
 
-				System.out.println("*****************distanceToSearch : " + distanceToSearch);
-
 				BotInformation botInformation = new BotInformation();
 				botInformation = candidate.getBotInformation();
 				botInformation.setDistanceToSearch(distanceToSearch);
@@ -391,7 +389,7 @@ public class ChintaiBotController {
 				botInformation.setIntentName("station not available again");
 				botInformationRepository.saveAndFlush(botInformation);
 
-				TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+				TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
 				PushMessage pushMessage = new PushMessage(userId, textMessage);
 				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 			}
@@ -402,8 +400,6 @@ public class ChintaiBotController {
 				if (customerMessage.contains("がいいです。")) {
 					priceToSearch = customerMessage.replace(" がいいです。", "");
 				}
-
-				System.out.println("*****************priceToSearch : " + priceToSearch);
 
 				BotInformation botInformation = new BotInformation();
 				botInformation = candidate.getBotInformation();
@@ -624,7 +620,7 @@ public class ChintaiBotController {
 				e.printStackTrace();
 			}
 		} else {
-			TextMessage textMessage = new TextMessage("Sorry, there are no matched rooms.");
+			TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			try {
 				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
@@ -743,7 +739,7 @@ public class ChintaiBotController {
 				e.printStackTrace();
 			}
 		} else {
-			TextMessage textMessage = new TextMessage("Sorry, there are no matched rooms.");
+			TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			try {
 				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
@@ -787,6 +783,9 @@ public class ChintaiBotController {
 					d = Math.pow(d, 2) + Math.pow(height, 2);
 
 					double distance = Math.sqrt(d);
+
+					System.out.println("****************DISTANCESSSSSSSSSSS************** : " + distance);
+
 					if (distance >= minDistance && distance <= maxDistance) {
 						jobsHashMap.put(room.getIdRoom(), distance);
 					}
