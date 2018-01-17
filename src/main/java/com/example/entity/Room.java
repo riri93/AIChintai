@@ -24,6 +24,9 @@ public class Room implements Serializable {
 	private int idRoom;
 	private String roomID;
 	private String nameBuilding;
+	private String buildingType;
+	private String floor;
+	private String roomType;
 	private String postCode;
 	private String detail;
 	private String pictureRoom;
@@ -32,7 +35,7 @@ public class Room implements Serializable {
 	private int keyMoney;
 	private int deposit;
 	private int insurance;
-	
+
 	@Column(precision = 10, scale = 2)
 	private Double longitudeRoom;
 	@Column(precision = 10, scale = 2)
@@ -152,6 +155,30 @@ public class Room implements Serializable {
 
 	public void setPictureRoom(String pictureRoom) {
 		this.pictureRoom = pictureRoom;
+	}
+
+	public String getBuildingType() {
+		return buildingType;
+	}
+
+	public void setBuildingType(String buildingType) {
+		this.buildingType = buildingType;
+	}
+
+	public String getFloor() {
+		return floor;
+	}
+
+	public void setFloor(String floor) {
+		this.floor = floor;
+	}
+
+	public String getRoomType() {
+		return roomType;
+	}
+
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
 	}
 
 }

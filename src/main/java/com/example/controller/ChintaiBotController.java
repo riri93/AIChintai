@@ -210,7 +210,7 @@ public class ChintaiBotController {
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
 				} else {
-					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
 					PushMessage pushMessage = new PushMessage(userId, textMessage);
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 				}
@@ -238,11 +238,9 @@ public class ChintaiBotController {
 				botInformation.setStationToSearch(stationToSearch);
 				botInformationRepository.saveAndFlush(botInformation);
 
-				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "どれぐらい近いほうがいいですか？",
-						Arrays.asList(new MessageAction("徒歩5分以内", "徒歩5分以内 がいいです。"),
-								new MessageAction("徒歩10分以内", "徒歩10分以内 がいいです。"),
-								new MessageAction("徒歩20分以内", "徒歩20分以内 がいいです。"),
-								new MessageAction("徒歩30分以内", "徒歩30分以内 がいいです。")));
+				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "どれぐらい近いほうがいいですか？", Arrays.asList(
+						new MessageAction("徒歩5分以内", "徒歩5分以内 がいいです。"), new MessageAction("徒歩10分以内", "徒歩10分以内 がいいです。"),
+						new MessageAction("徒歩20分以内", "徒歩20分以内 がいいです。"), new MessageAction("気にしない", "気にしない がいいです。")));
 				TemplateMessage templateMessage = new TemplateMessage("言語を選択してください。", buttonsTemplate);
 
 				PushMessage pushMessage = new PushMessage(userId, templateMessage);
@@ -301,11 +299,10 @@ public class ChintaiBotController {
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
 				} else {
-					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
 					PushMessage pushMessage = new PushMessage(userId, textMessage);
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 				}
-
 			}
 
 			// if the user choose other rooms
@@ -363,8 +360,12 @@ public class ChintaiBotController {
 			if (intentName.equals("distance")) {
 				String distanceToSearch = "";
 
-				if (customerMessage.contains("がいいです。")) {
-					distanceToSearch = customerMessage.replace(" がいいです。", "");
+				if (parameters != null && parameters.getString("distance") != null) {
+					distanceToSearch = parameters.getString("distance");
+				} else {
+					if (customerMessage.contains("がいいです。")) {
+						distanceToSearch = customerMessage.replace(" がいいです。", "");
+					}
 				}
 
 				BotInformation botInformation = new BotInformation();
@@ -374,7 +375,7 @@ public class ChintaiBotController {
 
 				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "家賃はいくらがいいですか？", Arrays.asList(
 						new MessageAction("5万円未満", "5万円未満 がいいです。"), new MessageAction("7万円未満", "7万円未満 がいいです。"),
-						new MessageAction("10万円未満", "10万円未満 がいいです。"), new MessageAction("10万円以上", "10万円以上 がいいです。")));
+						new MessageAction("10万円未満", "10万円未満 がいいです。"), new MessageAction("気にしない", "気にしない がいいです。")));
 				TemplateMessage templateMessage = new TemplateMessage("家賃はいくらがいいですか？", buttonsTemplate);
 
 				PushMessage pushMessage = new PushMessage(userId, templateMessage);
@@ -397,7 +398,10 @@ public class ChintaiBotController {
 			// if the user choose a price
 			if (intentName.equals("price")) {
 				String priceToSearch = "";
-				if (customerMessage.contains("がいいです。")) {
+
+				if (parameters != null && parameters.getString("distance") != null) {
+					priceToSearch = parameters.getString("distance");
+				} else if (customerMessage.contains("がいいです。")) {
 					priceToSearch = customerMessage.replace(" がいいです。", "");
 				}
 
@@ -416,7 +420,9 @@ public class ChintaiBotController {
 
 			}
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			TextMessage textMessage = new TextMessage("ごめんなさい、わからないです。メニューをみてください。");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
@@ -462,8 +468,8 @@ public class ChintaiBotController {
 			byte[] titleByte = title.getBytes(StandardCharsets.UTF_8); // Explicit,
 			title = new String(titleByte, StandardCharsets.UTF_8);
 
-			/*************************/
-			String textToSend = "月" + room.getPrice() + "円";
+			String textToSend = "月" + room.getPrice() / 1000 + "円" + " | " + room.getBuildingType() + room.getFloor() + "階 \n"
+					+ room.getRoomID() + room.getRoomType();
 
 			if (textToSend.length() > 59) {
 				textToSend = textToSend.substring(0, 59);
@@ -531,9 +537,13 @@ public class ChintaiBotController {
 		if (stationToSearch.endsWith(" ")) {
 			stationToSearch = stationToSearch.replaceAll("\\s+$", "");
 		}
+		String stationName = "";
+		String lineName = "";
 
-		String stationName = stationToSearch.substring(0, stationToSearch.indexOf("|"));
-		String lineName = stationToSearch.substring(stationToSearch.indexOf("|") + 2, stationToSearch.length());
+		if (stationToSearch.indexOf("|") != -1) {
+			stationName = stationToSearch.substring(0, stationToSearch.indexOf("|"));
+			lineName = stationToSearch.substring(stationToSearch.indexOf("|") + 2, stationToSearch.length());
+		}
 
 		System.out.println("***********SEARCH ROOM STATION***********");
 		System.out.println("***************stationToSearch: " + stationToSearch);
@@ -543,81 +553,93 @@ public class ChintaiBotController {
 		NearestStation station = new NearestStation();
 		station = nearestStationRepository.findStationByNameAndLine(stationName, lineName);
 
-		int minPrice = 0;
-		int maxPrice = 0;
+		if (station != null && station.getIdNearestStation() != 0) {
 
-		if (botInformation.getPriceToSearch().equals("5万円未満")) {
-			minPrice = 0;
-			maxPrice = 49999;
-		} else if (botInformation.getPriceToSearch().equals("7万円未満")) {
-			minPrice = 50000;
-			maxPrice = 69999;
-		} else if (botInformation.getPriceToSearch().equals("10万円未満")) {
-			minPrice = 70000;
-			maxPrice = 99999;
-		} else if (botInformation.getPriceToSearch().equals("10万円以上")) {
-			minPrice = 100000;
-			maxPrice = Integer.MAX_VALUE;
-		}
+			int minPrice = 0;
+			int maxPrice = 0;
 
-		System.out.println("minPrice : " + minPrice);
-		System.out.println("maxPrice : " + maxPrice);
-
-		double minDistance = 0;
-		double maxDistance = 0;
-
-		if (botInformation.getDistanceToSearch().equals("徒歩5分以内")) {
-			minDistance = 0;
-			maxDistance = 1;
-		} else if (botInformation.getDistanceToSearch().equals("徒歩10分以内")) {
-			minDistance = 1;
-			maxDistance = 2;
-		} else if (botInformation.getDistanceToSearch().equals("徒歩20分以内")) {
-			minDistance = 2;
-			maxDistance = 3;
-		} else if (botInformation.getDistanceToSearch().equals("徒歩30分以内")) {
-			minDistance = 3;
-			maxDistance = Double.MAX_VALUE;
-		}
-
-		System.out.println("minDistance : " + minDistance);
-		System.out.println("maxDistance : " + maxDistance);
-
-		roomsDistance = roomRepository.findRoomsByPrice(minPrice, maxPrice);
-
-		System.out.println("************rooms: " + roomsDistance.size());
-
-		HashMap roomsHashMap = new HashMap();
-		List<Integer> roomsToDisplay = new ArrayList<>();
-
-		roomsHashMap = getRoomStationsDistanceMatrix(roomsDistance, station, minDistance, maxDistance);
-
-		System.out.println("*********roomsHashMap : " + roomsHashMap.size());
-
-		Iterator<Map.Entry<Integer, Double>> entriesSorted = roomsHashMap.entrySet().iterator();
-		while (entriesSorted.hasNext()) {
-			Map.Entry<Integer, Double> entry = entriesSorted.next();
-			roomsToDisplay.add(entry.getKey());
-			System.out.println("ID:  " + entry.getKey() + " DISTANCE: " + entry.getValue());
-		}
-
-		Collections.shuffle(roomsToDisplay);
-
-		if (roomsToDisplay.size() <= 5) {
-			for (int i = 0; i < roomsToDisplay.size(); i++) {
-				rooms.add(roomRepository.findOne(roomsToDisplay.get(i)));
+			if (botInformation.getPriceToSearch().equals("5万円未満")) {
+				minPrice = 0;
+				maxPrice = 49999;
+			} else if (botInformation.getPriceToSearch().equals("7万円未満")) {
+				minPrice = 50000;
+				maxPrice = 69999;
+			} else if (botInformation.getPriceToSearch().equals("10万円未満")) {
+				minPrice = 70000;
+				maxPrice = 99999;
 			}
-		} else {
-			for (int i = 0; i < 5; i++) {
-				rooms.add(roomRepository.findOne(roomsToDisplay.get(i)));
-			}
-		}
 
-		if (rooms != null && rooms.size() != 0) {
-			try {
-				sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
-			} catch (IOException | JSONException e) {
-				e.printStackTrace();
+			System.out.println("minPrice : " + minPrice);
+			System.out.println("maxPrice : " + maxPrice);
+
+			if (!botInformation.getPriceToSearch().equals("気にしない")) {
+				roomsDistance = roomRepository.findRoomsByPrice(minPrice, maxPrice);
+			} else if (botInformation.getPriceToSearch().equals("気にしない")) {
+				roomsDistance = roomRepository.findAll();
+			}
+
+			double minDistance = 0;
+			double maxDistance = 0;
+
+			if (botInformation.getDistanceToSearch().equals("徒歩5分以内")) {
+				minDistance = 0;
+				maxDistance = 1;
+			} else if (botInformation.getDistanceToSearch().equals("徒歩10分以内")) {
+				minDistance = 1;
+				maxDistance = 2;
+			} else if (botInformation.getDistanceToSearch().equals("徒歩20分以内")) {
+				minDistance = 2;
+				maxDistance = 3;
+			} else if (botInformation.getDistanceToSearch().equals("気にしない")) {
+				minDistance = 3;
+				maxDistance = 10;
+			}
+
+			System.out.println("minDistance : " + minDistance);
+			System.out.println("maxDistance : " + maxDistance);
+
+			System.out.println("************rooms: " + roomsDistance.size());
+
+			HashMap roomsHashMap = new HashMap();
+			List<Integer> roomsToDisplay = new ArrayList<>();
+
+			roomsHashMap = getRoomStationsDistanceMatrix(roomsDistance, station, minDistance, maxDistance);
+
+			System.out.println("*********roomsHashMap : " + roomsHashMap.size());
+
+			Iterator<Map.Entry<Integer, Double>> entriesSorted = roomsHashMap.entrySet().iterator();
+			while (entriesSorted.hasNext()) {
+				Map.Entry<Integer, Double> entry = entriesSorted.next();
+				roomsToDisplay.add(entry.getKey());
+				System.out.println("ID:  " + entry.getKey() + " DISTANCE: " + entry.getValue());
+			}
+
+			Collections.shuffle(roomsToDisplay);
+
+			if (roomsToDisplay.size() <= 5) {
+				for (int i = 0; i < roomsToDisplay.size(); i++) {
+					rooms.add(roomRepository.findOne(roomsToDisplay.get(i)));
+				}
+			} else {
+				for (int i = 0; i < 5; i++) {
+					rooms.add(roomRepository.findOne(roomsToDisplay.get(i)));
+				}
+			}
+
+			if (rooms != null && rooms.size() != 0) {
+				try {
+					sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
+				} catch (IOException | JSONException e) {
+					e.printStackTrace();
+				}
+			} else {
+				TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
+				PushMessage pushMessage = new PushMessage(userId, textMessage);
+				try {
+					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		} else {
 			TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
@@ -650,10 +672,15 @@ public class ChintaiBotController {
 			stationToSearch = stationToSearch.replaceAll("\\s+$", "");
 		}
 
-		String stationName = stationToSearch.substring(0, stationToSearch.indexOf("|"));
-		String lineName = stationToSearch.substring(stationToSearch.indexOf("|") + 2, stationToSearch.length());
+		String stationName = "";
+		String lineName = "";
 
-		System.out.println("***********SEARCH MORE ROOM STATION***********");
+		if (stationToSearch.indexOf("|") != -1) {
+			stationName = stationToSearch.substring(0, stationToSearch.indexOf("|"));
+			lineName = stationToSearch.substring(stationToSearch.indexOf("|") + 2, stationToSearch.length());
+		}
+
+		System.out.println("***********SEARCH ROOM STATION***********");
 		System.out.println("***************stationToSearch: " + stationToSearch);
 		System.out.println("***************stationName : " + stationName);
 		System.out.println("***************lineName : " + lineName);
@@ -661,82 +688,96 @@ public class ChintaiBotController {
 		NearestStation station = new NearestStation();
 		station = nearestStationRepository.findStationByNameAndLine(stationName, lineName);
 
-		int minPrice = 0;
-		int maxPrice = 0;
+		if (station != null && station.getIdNearestStation() != 0) {
 
-		if (botInformation.getPriceToSearch().equals("5万円未満")) {
-			minPrice = 0;
-			maxPrice = 49999;
-		} else if (botInformation.getPriceToSearch().equals("7万円未満")) {
-			minPrice = 50000;
-			maxPrice = 69999;
-		} else if (botInformation.getPriceToSearch().equals("10万円未満")) {
-			minPrice = 70000;
-			maxPrice = 99999;
-		} else if (botInformation.getPriceToSearch().equals("10万円以上")) {
-			minPrice = 100000;
-			maxPrice = Integer.MAX_VALUE;
-		}
+			int minPrice = 0;
+			int maxPrice = 0;
 
-		System.out.println("minPrice : " + minPrice);
-		System.out.println("maxPrice : " + maxPrice);
+			if (botInformation.getPriceToSearch().equals("5万円未満")) {
+				minPrice = 0;
+				maxPrice = 49999;
+			} else if (botInformation.getPriceToSearch().equals("7万円未満")) {
+				minPrice = 50000;
+				maxPrice = 69999;
+			} else if (botInformation.getPriceToSearch().equals("10万円未満")) {
+				minPrice = 70000;
+				maxPrice = 99999;
+			}
 
-		double minDistance = 0;
-		double maxDistance = 0;
+			System.out.println("minPrice : " + minPrice);
+			System.out.println("maxPrice : " + maxPrice);
 
-		if (botInformation.getDistanceToSearch().equals("徒歩5分以内")) {
-			minDistance = 0;
-			maxDistance = 1;
-		} else if (botInformation.getDistanceToSearch().equals("徒歩10分以内")) {
-			minDistance = 1;
-			maxDistance = 2;
-		} else if (botInformation.getDistanceToSearch().equals("徒歩20分以内")) {
-			minDistance = 2;
-			maxDistance = 3;
-		} else if (botInformation.getDistanceToSearch().equals("徒歩30分以内")) {
-			minDistance = 3;
-			maxDistance = Double.MAX_VALUE;
-		}
+			if (!botInformation.getPriceToSearch().equals("気にしない")) {
+				roomsDistance = roomRepository.findRoomsByPrice(minPrice, maxPrice);
+			} else if (botInformation.getPriceToSearch().equals("気にしない")) {
+				roomsDistance = roomRepository.findAll();
+			}
 
-		System.out.println("minDistance : " + minDistance);
-		System.out.println("maxDistance : " + maxDistance);
+			double minDistance = 0;
+			double maxDistance = 0;
 
-		roomsDistance = roomRepository.findRoomsByPrice(minPrice, maxPrice);
+			if (botInformation.getDistanceToSearch().equals("徒歩5分以内")) {
+				minDistance = 0;
+				maxDistance = 1;
+			} else if (botInformation.getDistanceToSearch().equals("徒歩10分以内")) {
+				minDistance = 1;
+				maxDistance = 2;
+			} else if (botInformation.getDistanceToSearch().equals("徒歩20分以内")) {
+				minDistance = 2;
+				maxDistance = 3;
+			} else if (botInformation.getDistanceToSearch().equals("気にしない")) {
+				minDistance = 3;
+				maxDistance = 10;
+			}
 
-		System.out.println("************rooms: " + roomsDistance.size());
+			System.out.println("minDistance : " + minDistance);
+			System.out.println("maxDistance : " + maxDistance);
 
-		HashMap roomsHashMap = new HashMap();
-		List<Integer> roomsToDisplay = new ArrayList<>();
+			roomsDistance = roomRepository.findRoomsByPrice(minPrice, maxPrice);
 
-		roomsHashMap = getRoomStationsDistanceMatrix(roomsDistance, station, minDistance, maxDistance);
+			System.out.println("************rooms: " + roomsDistance.size());
 
-		Iterator<Map.Entry<Integer, Double>> entriesSorted = roomsHashMap.entrySet().iterator();
-		while (entriesSorted.hasNext()) {
-			Map.Entry<Integer, Double> entry = entriesSorted.next();
-			roomsToDisplay.add(entry.getKey());
-			System.out.println("ID:  " + entry.getKey() + " DISTANCE: " + entry.getValue());
-		}
+			HashMap roomsHashMap = new HashMap();
+			List<Integer> roomsToDisplay = new ArrayList<>();
 
-		Collections.shuffle(roomsToDisplay);
+			roomsHashMap = getRoomStationsDistanceMatrix(roomsDistance, station, minDistance, maxDistance);
 
-		if (roomsToDisplay.size() > 5) {
-			if (roomsToDisplay.size() <= botInformation.getPageMoreRooms() + 5) {
-				for (int i = botInformation.getPageMoreRooms(); i < roomsToDisplay.size(); i++) {
-					rooms.add(roomRepository.findOne(roomsToDisplay.get(i)));
-				}
-			} else {
+			Iterator<Map.Entry<Integer, Double>> entriesSorted = roomsHashMap.entrySet().iterator();
+			while (entriesSorted.hasNext()) {
+				Map.Entry<Integer, Double> entry = entriesSorted.next();
+				roomsToDisplay.add(entry.getKey());
+				System.out.println("ID:  " + entry.getKey() + " DISTANCE: " + entry.getValue());
+			}
 
-				for (int i = botInformation.getPageMoreRooms(); i < botInformation.getPageMoreRooms() + 5; i++) {
-					rooms.add(roomRepository.findOne(roomsToDisplay.get(i)));
+			Collections.shuffle(roomsToDisplay);
+
+			if (roomsToDisplay.size() > 5) {
+				if (roomsToDisplay.size() <= botInformation.getPageMoreRooms() + 5) {
+					for (int i = botInformation.getPageMoreRooms(); i < roomsToDisplay.size(); i++) {
+						rooms.add(roomRepository.findOne(roomsToDisplay.get(i)));
+					}
+				} else {
+
+					for (int i = botInformation.getPageMoreRooms(); i < botInformation.getPageMoreRooms() + 5; i++) {
+						rooms.add(roomRepository.findOne(roomsToDisplay.get(i)));
+					}
 				}
 			}
-		}
 
-		if (rooms != null && rooms.size() != 0) {
-			try {
-				sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
-			} catch (IOException | JSONException e) {
-				e.printStackTrace();
+			if (rooms != null && rooms.size() != 0) {
+				try {
+					sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, rooms);
+				} catch (IOException | JSONException e) {
+					e.printStackTrace();
+				}
+			} else {
+				TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
+				PushMessage pushMessage = new PushMessage(userId, textMessage);
+				try {
+					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		} else {
 			TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
