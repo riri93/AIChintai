@@ -363,8 +363,12 @@ public class ChintaiBotController {
 				if (parameters != null && parameters.getString("distance") != null) {
 					distanceToSearch = parameters.getString("distance");
 				} else {
-					if (customerMessage.contains("がいいです。")) {
-						distanceToSearch = customerMessage.replace(" がいいです。", "");
+					if (!customerMessage.equals("駅からの距離は気にしません。")) {
+						if (customerMessage.contains("がいいです。")) {
+							distanceToSearch = customerMessage.replace(" がいいです。", "");
+						}
+					} else {
+						distanceToSearch = "駅からの距離は気にしません。";
 					}
 				}
 
@@ -401,8 +405,12 @@ public class ChintaiBotController {
 
 				if (parameters != null && parameters.getString("price") != null) {
 					priceToSearch = parameters.getString("price");
-				} else if (customerMessage.contains("がいいです。")) {
-					priceToSearch = customerMessage.replace(" がいいです。", "");
+				} else if (!customerMessage.equals("家賃は気にしません。")) {
+					if (customerMessage.contains("がいいです。")) {
+						priceToSearch = customerMessage.replace(" がいいです。", "");
+					} else {
+						priceToSearch = "家賃は気にしません。";
+					}
 				}
 
 				BotInformation botInformation = new BotInformation();
@@ -572,9 +580,9 @@ public class ChintaiBotController {
 			System.out.println("minPrice : " + minPrice);
 			System.out.println("maxPrice : " + maxPrice);
 
-			if (!botInformation.getPriceToSearch().equals("気にしない")) {
+			if (!botInformation.getPriceToSearch().equals("家賃は気にしません。")) {
 				roomsDistance = roomRepository.findRoomsByPrice(minPrice, maxPrice);
-			} else if (botInformation.getPriceToSearch().equals("気にしない")) {
+			} else if (botInformation.getPriceToSearch().equals("家賃は気にしません。")) {
 				roomsDistance = roomRepository.findAll();
 			}
 
@@ -590,7 +598,7 @@ public class ChintaiBotController {
 			} else if (botInformation.getDistanceToSearch().equals("徒歩20分以内")) {
 				minDistance = 2;
 				maxDistance = 3;
-			} else if (botInformation.getDistanceToSearch().equals("気にしない")) {
+			} else if (botInformation.getDistanceToSearch().equals("駅からの距離は気にしません。")) {
 				minDistance = 3;
 				maxDistance = 10;
 			}
@@ -707,9 +715,9 @@ public class ChintaiBotController {
 			System.out.println("minPrice : " + minPrice);
 			System.out.println("maxPrice : " + maxPrice);
 
-			if (!botInformation.getPriceToSearch().equals("気にしない")) {
+			if (!botInformation.getPriceToSearch().equals("家賃は気にしません。")) {
 				roomsDistance = roomRepository.findRoomsByPrice(minPrice, maxPrice);
-			} else if (botInformation.getPriceToSearch().equals("気にしない")) {
+			} else if (botInformation.getPriceToSearch().equals("家賃は気にしません。")) {
 				roomsDistance = roomRepository.findAll();
 			}
 
@@ -725,7 +733,7 @@ public class ChintaiBotController {
 			} else if (botInformation.getDistanceToSearch().equals("徒歩20分以内")) {
 				minDistance = 2;
 				maxDistance = 3;
-			} else if (botInformation.getDistanceToSearch().equals("気にしない")) {
+			} else if (botInformation.getDistanceToSearch().equals("駅からの距離は気にしません。")) {
 				minDistance = 3;
 				maxDistance = 10;
 			}
