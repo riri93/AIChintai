@@ -1,6 +1,5 @@
 package com.example.controller;
 
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -464,7 +463,10 @@ public class ChintaiBotController {
 				botInformation.setIntentName("recommend room");
 				botInformationRepository.saveAndFlush(botInformation);
 				// TODO
-				
+
+				/********** Search for Rooms ************/
+				searchRecommendedRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp);
+				/**********************/
 			}
 
 		} catch (Exception e) {
@@ -846,6 +848,56 @@ public class ChintaiBotController {
 		} else {
 			TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			try {
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Method to search recommended rooms
+	 * 
+	 * @param candidate
+	 * @param userId
+	 * @param CHANNEL_ACCESS_TOKEN
+	 * @param timestamp
+	 */
+	public void searchRecommendedRooms(Candidate candidate, String userId, String CHANNEL_ACCESS_TOKEN,
+			String timestamp) {
+		List<Room> rooms = new ArrayList<Room>();
+		List<Room> roomsToDisplay = new ArrayList<Room>();
+
+		rooms = roomRepository.findAll();
+
+		Collections.shuffle(rooms);
+
+		if (rooms.size() <= 5) {
+			for (int i = 0; i < rooms.size(); i++) {
+				roomsToDisplay.add(roomRepository.findOne(rooms.get(i)));
+			}
+		} else {
+			for (int i = 0; i < 5; i++) {
+				roomsToDisplay.add(roomRepository.findOne(rooms.get(i)));
+			}
+		}
+
+		if (roomsToDisplay != null && roomsToDisplay.size() != 0) {
+			try {
+				sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, roomsToDisplay);
+			} catch (IOException | JSONException e) {
+				e.printStackTrace();
+			}
+		} else {
+			ConfirmTemplate confirmTemplate = new ConfirmTemplate("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
+					new MessageAction("はい", "はい。別の条件でもう一度探してみます。"), new MessageAction("いいえ", "いいえ。別の条件で探さなくても大丈夫です。"));
+
+			TemplateMessage templateMessage = new TemplateMessage("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
+					confirmTemplate);
+
+			PushMessage pushMessage = new PushMessage(userId, templateMessage);
+
 			try {
 				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 			} catch (IOException e) {
