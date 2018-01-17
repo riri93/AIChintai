@@ -795,8 +795,15 @@ public class ChintaiBotController {
 					e.printStackTrace();
 				}
 			} else {
-				TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
-				PushMessage pushMessage = new PushMessage(userId, textMessage);
+				ConfirmTemplate confirmTemplate = new ConfirmTemplate("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
+						new MessageAction("はい", "はい。別の条件でもう一度探してみます。"),
+						new MessageAction("いいえ", "いいえ。別の条件で探さなくても大丈夫です。"));
+
+				TemplateMessage templateMessage = new TemplateMessage("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
+						confirmTemplate);
+
+				PushMessage pushMessage = new PushMessage(userId, templateMessage);
+
 				try {
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 				} catch (IOException e) {
