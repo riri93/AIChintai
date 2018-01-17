@@ -210,7 +210,7 @@ public class ChintaiBotController {
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
 				} else {
-					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
 					PushMessage pushMessage = new PushMessage(userId, textMessage);
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 				}
@@ -299,11 +299,10 @@ public class ChintaiBotController {
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
 				} else {
-					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
 					PushMessage pushMessage = new PushMessage(userId, textMessage);
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 				}
-
 			}
 
 			// if the user choose other rooms
@@ -361,8 +360,12 @@ public class ChintaiBotController {
 			if (intentName.equals("distance")) {
 				String distanceToSearch = "";
 
-				if (customerMessage.contains("がいいです。")) {
-					distanceToSearch = customerMessage.replace(" がいいです。", "");
+				if (parameters != null && parameters.getString("distance") != null) {
+					distanceToSearch = parameters.getString("distance");
+				} else {
+					if (customerMessage.contains("がいいです。")) {
+						distanceToSearch = customerMessage.replace(" がいいです。", "");
+					}
 				}
 
 				BotInformation botInformation = new BotInformation();
@@ -395,7 +398,10 @@ public class ChintaiBotController {
 			// if the user choose a price
 			if (intentName.equals("price")) {
 				String priceToSearch = "";
-				if (customerMessage.contains("がいいです。")) {
+
+				if (parameters != null && parameters.getString("distance") != null) {
+					priceToSearch = parameters.getString("distance");
+				} else if (customerMessage.contains("がいいです。")) {
 					priceToSearch = customerMessage.replace(" がいいです。", "");
 				}
 
@@ -414,7 +420,9 @@ public class ChintaiBotController {
 
 			}
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			TextMessage textMessage = new TextMessage("ごめんなさい、わからないです。メニューをみてください。");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
@@ -460,8 +468,8 @@ public class ChintaiBotController {
 			byte[] titleByte = title.getBytes(StandardCharsets.UTF_8); // Explicit,
 			title = new String(titleByte, StandardCharsets.UTF_8);
 
-			/*************************/
-			String textToSend = "月" + room.getPrice() + "円";
+			String textToSend = "月" + room.getPrice() / 1000 + "円" + " | " + room.getBuildingType() + room.getFloor() + "階 \n"
+					+ room.getRoomID() + room.getRoomType();
 
 			if (textToSend.length() > 59) {
 				textToSend = textToSend.substring(0, 59);
