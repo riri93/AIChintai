@@ -399,8 +399,8 @@ public class ChintaiBotController {
 			if (intentName.equals("price")) {
 				String priceToSearch = "";
 
-				if (parameters != null && parameters.getString("distance") != null) {
-					priceToSearch = parameters.getString("distance");
+				if (parameters != null && parameters.getString("price") != null) {
+					priceToSearch = parameters.getString("price");
 				} else if (customerMessage.contains("がいいです。")) {
 					priceToSearch = customerMessage.replace(" がいいです。", "");
 				}
@@ -468,8 +468,8 @@ public class ChintaiBotController {
 			byte[] titleByte = title.getBytes(StandardCharsets.UTF_8); // Explicit,
 			title = new String(titleByte, StandardCharsets.UTF_8);
 
-			String textToSend = "月" + room.getPrice() / 1000 + "円" + " | " + room.getBuildingType() + room.getFloor() + "階 \n"
-					+ room.getRoomID() + room.getRoomType();
+			String textToSend = "月" + room.getPrice() / 1000 + "円" + " | " + room.getBuildingType() + room.getFloor()
+					+ "階 \n" + room.getRoomID() + room.getRoomType();
 
 			if (textToSend.length() > 59) {
 				textToSend = textToSend.substring(0, 59);
