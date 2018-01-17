@@ -240,7 +240,7 @@ public class ChintaiBotController {
 
 				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "どれぐらい近いほうがいいですか？", Arrays.asList(
 						new MessageAction("徒歩5分以内", "徒歩5分以内 がいいです。"), new MessageAction("徒歩10分以内", "徒歩10分以内 がいいです。"),
-						new MessageAction("徒歩20分以内", "徒歩20分以内 がいいです。"), new MessageAction("気にしない", "気にしない がいいです。")));
+						new MessageAction("徒歩20分以内", "徒歩20分以内 がいいです。"), new MessageAction("気にしない", "駅からの距離は気にしません。")));
 				TemplateMessage templateMessage = new TemplateMessage("言語を選択してください。", buttonsTemplate);
 
 				PushMessage pushMessage = new PushMessage(userId, templateMessage);
@@ -379,7 +379,7 @@ public class ChintaiBotController {
 
 				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "家賃はいくらがいいですか？", Arrays.asList(
 						new MessageAction("5万円未満", "5万円未満 がいいです。"), new MessageAction("7万円未満", "7万円未満 がいいです。"),
-						new MessageAction("10万円未満", "10万円未満 がいいです。"), new MessageAction("気にしない", "気にしない がいいです。")));
+						new MessageAction("10万円未満", "10万円未満 がいいです。"), new MessageAction("気にしない", "家賃は気にしません。")));
 				TemplateMessage templateMessage = new TemplateMessage("家賃はいくらがいいですか？", buttonsTemplate);
 
 				PushMessage pushMessage = new PushMessage(userId, templateMessage);
@@ -428,9 +428,7 @@ public class ChintaiBotController {
 
 			}
 
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			TextMessage textMessage = new TextMessage("ごめんなさい、わからないです。メニューをみてください。");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
