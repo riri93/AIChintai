@@ -639,11 +639,11 @@
 			abstract : false,
 			templateUrl : helper.basepath('apply-view.html')
 		})
-		$httpProvider.interceptors.push('authHttpResponseInterceptor');
-		$locationProvider.html5Mode({
-			enabled : true,
-			requireBase : true
-		});
+//		$httpProvider.interceptors.push('authHttpResponseInterceptor');
+//		$locationProvider.html5Mode({
+//			enabled : true,
+//			requireBase : true
+//		});
 
 		// routesConfig
 	}

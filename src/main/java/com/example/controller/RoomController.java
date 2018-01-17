@@ -48,7 +48,7 @@ public class RoomController {
 	 * @throws Exception
 	 * 
 	 */
-	@RequestMapping(value = "/apply/{idRoom}/{idCandidate}", method = RequestMethod.POST)
+	@RequestMapping(value = "/applya/{idRoom}/{idCandidate}", method = RequestMethod.POST)
 	public LinkedHashMap<String, Object> applyForRoom(@PathVariable("idRoom") int idRoom,
 			@PathVariable("idCandidate") int idCandidate) {
 
@@ -70,7 +70,6 @@ public class RoomController {
 			candidateRoomRepository.save(candidateRoomRelation);
 			json.put("candidateRoomRelation", candidateRoomRelation);
 			json.put("exist", false);
-
 			// String subjectEmail = "新規応募： " + job.getShop().getNameShop() + " " +
 			// job.getPositionName();
 			// String toShop = job.getShop().getEmailShop();

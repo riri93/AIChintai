@@ -1,8 +1,8 @@
 (function() {
 	'use strict';
 
-	angular.module('app.core').service('RoomService', JobService);
-	JobService.$inject = [ '$http', '$location', '$localStorage', '$q' ];
+	angular.module('app.core').service('RoomService', RoomService);
+	RoomService.$inject = [ '$http', '$location', '$localStorage', '$q' ];
 
 	function RoomService($http, $location, $localStorage, $q) {
 		this.applyForRoom = applyForRoom;
