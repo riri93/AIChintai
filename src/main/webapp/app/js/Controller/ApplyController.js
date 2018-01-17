@@ -69,94 +69,94 @@
 		;
 
 	
-		function executeApply() {
-
-			if (vm.applyForm.$valid) {
-				CandidateService
-				.saveCandidate(
-						vm.candidateToPreview,
-						function(result, data) {
-							if (result) {
-										console
-										.log("--Candidate updated-----");
-						
-				/** *********************************** */
-										RoomService
-												.applyForRoom(
-														vm.candidateToPreview.idUserInformation,
-														vm.roomToPreview.idRoom).then(
-														function(result) {
-															if (result) {
-																console
-																		.log('---------------------'
-																				+ data);
-																if (result.exist == true) {
-																	console
-																			.log("-----checkApplyToRoom----------true");
-																	swalService
-																			.info(
-																					"info",
-																					"You have already applied for this room!");
-																} else {
-																	console
-																			.log("--------------false");
-																	vm.loading = true;
-
-																	RoomService
-																			.applyForRoom(
-																					vm.roomToPreview.idRoom,
-																					vm.candidateToPreview.idCandidate,
-																					function(
-																							result,
-																							data) {
-																						if (result) {
-																							if (vm.candidateToPreview.botInformation != null) {
-										
-																									swalService
-																											.success(
-																													"応募成功",
-																													"応募しました！");
-																								}
-																							}
-																					}
-																}
-																							/** ********************* */
-															}else{
-
-																							console
-																									.log("--apply for room--ERROR----");
-																							vm.loading = false;
-																						}
-																					});
-																}
-															else {
-																console
-																		.log("---ERROR----");
-															}
-							
-														
-									
-
-								}else {
-									console
-									.log("--Candidate update---ERROR----");
-								}
-			} else {
-				vm.applyForm.userName.$dirty = true;
-				vm.applyForm.preferedDateCand.$dirty = true;
-				vm.applyForm.userPhone.$dirty = true;
-				vm.applyForm.preferedTime.$dirty = true;
-				vm.applyForm.preferedDate.$dirty = true;
-			}
-
-		}
-
-		function applyForRoom() {
-			vm.exist = false;
-			console.log("room " + vm.roomToPreview.idRoom);
-			console.log("cand " + vm.candidateToPreview.idUserInformation);
-			executeApply();
-		}
+//		function executeApply() {
+//
+//			if (vm.applyForm.$valid) {
+//				CandidateService
+//				.saveCandidate(
+//						vm.candidateToPreview,
+//						function(result, data) {
+//							if (result) {
+//										console
+//										.log("--Candidate updated-----");
+//						
+//				/** *********************************** */
+//										RoomService
+//												.applyForRoom(
+//														vm.candidateToPreview.idUserInformation,
+//														vm.roomToPreview.idRoom).then(
+//														function(result) {
+//															if (result) {
+//																console
+//																		.log('---------------------'
+//																				+ data);
+//																if (result.exist == true) {
+//																	console
+//																			.log("-----checkApplyToRoom----------true");
+//																	swalService
+//																			.info(
+//																					"info",
+//																					"You have already applied for this room!");
+//																} else {
+//																	console
+//																			.log("--------------false");
+//																	vm.loading = true;
+//
+//																	RoomService
+//																			.applyForRoom(
+//																					vm.roomToPreview.idRoom,
+//																					vm.candidateToPreview.idCandidate,
+//																					function(
+//																							result,
+//																							data) {
+//																						if (result) {
+//																							if (vm.candidateToPreview.botInformation != null) {
+//										
+//																									swalService
+//																											.success(
+//																													"応募成功",
+//																													"応募しました！");
+//																								}
+//																							}
+//																					}
+//																}
+//																							/** ********************* */
+//															}else{
+//
+//																							console
+//																									.log("--apply for room--ERROR----");
+//																							vm.loading = false;
+//																						}
+//																					});
+//																}
+//															else {
+//																console
+//																		.log("---ERROR----");
+//															}
+//							
+//														
+//									
+//
+//								}else {
+//									console
+//									.log("--Candidate update---ERROR----");
+//								}
+//			} else {
+//				vm.applyForm.userName.$dirty = true;
+//				vm.applyForm.preferedDateCand.$dirty = true;
+//				vm.applyForm.userPhone.$dirty = true;
+//				vm.applyForm.preferedTime.$dirty = true;
+//				vm.applyForm.preferedDate.$dirty = true;
+//			}
+//
+//		}
+//
+//		function applyForRoom() {
+//			vm.exist = false;
+//			console.log("room " + vm.roomToPreview.idRoom);
+//			console.log("cand " + vm.candidateToPreview.idUserInformation);
+//			executeApply();
+//		}
 
 		function tConv24(time24) {
 			var ts = time24;
