@@ -1,6 +1,5 @@
 package com.example.controller;
 
-import static org.assertj.core.api.Assertions.in;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
