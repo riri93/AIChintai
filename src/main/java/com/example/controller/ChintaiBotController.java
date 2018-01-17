@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -41,6 +42,7 @@ import com.linecorp.bot.model.message.TextMessage;
 
 import com.linecorp.bot.model.message.template.CarouselColumn;
 import com.linecorp.bot.model.message.template.CarouselTemplate;
+import com.linecorp.bot.model.message.template.ConfirmTemplate;
 import com.linecorp.bot.model.profile.UserProfileResponse;
 
 import retrofit2.Response;
@@ -428,6 +430,14 @@ public class ChintaiBotController {
 
 			}
 
+			if (intentName.equals("No, I don't want to search with another condition.")) {
+
+				TextMessage textMessage = new TextMessage("分かりました。また、お部屋を探すときは言ってくださいね。");
+				PushMessage pushMessage = new PushMessage(userId, textMessage);
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+
+			}
+
 		} catch (Exception e) {
 			TextMessage textMessage = new TextMessage("ごめんなさい、わからないです。メニューをみてください。");
 			PushMessage pushMessage = new PushMessage(userId, textMessage);
@@ -639,8 +649,16 @@ public class ChintaiBotController {
 					e.printStackTrace();
 				}
 			} else {
-				TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
-				PushMessage pushMessage = new PushMessage(userId, textMessage);
+
+				ConfirmTemplate confirmTemplate = new ConfirmTemplate("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
+						new MessageAction("はい", "はい。別の条件でもう一度探してみます。"),
+						new MessageAction("いいえ", "いいえ。別の条件で探さなくても大丈夫です。"));
+
+				TemplateMessage templateMessage = new TemplateMessage("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
+						confirmTemplate);
+
+				PushMessage pushMessage = new PushMessage(userId, templateMessage);
+
 				try {
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 				} catch (IOException e) {
