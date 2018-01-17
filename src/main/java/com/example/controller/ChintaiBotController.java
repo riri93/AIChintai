@@ -462,9 +462,8 @@ public class ChintaiBotController {
 				botInformation = candidate.getBotInformation();
 				botInformation.setIntentName("recommend room");
 				botInformationRepository.saveAndFlush(botInformation);
-				// TODO
 
-				/********** Search for Rooms ************/
+				/********** Search for recommended Rooms ************/
 				searchRecommendedRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp);
 				/**********************/
 			}
@@ -875,11 +874,11 @@ public class ChintaiBotController {
 
 		if (rooms.size() <= 5) {
 			for (int i = 0; i < rooms.size(); i++) {
-				roomsToDisplay.add(roomRepository.findOne(rooms.get(i)));
+				roomsToDisplay.add(rooms.get(i));
 			}
 		} else {
 			for (int i = 0; i < 5; i++) {
-				roomsToDisplay.add(roomRepository.findOne(rooms.get(i)));
+				roomsToDisplay.add(rooms.get(i));
 			}
 		}
 
