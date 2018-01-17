@@ -10,12 +10,12 @@
 
 	function ApplyFormController($http, $scope, $state, RoomService, $location,
 			$localStorage, $routeParams, swalService, $window,
-			$translate, ModalService, $filter,$q, CandidateService) {
+			$translate, $filter,$q, CandidateService) {
 		var vm = this;
 		vm.candidateToPreview = null;
 		vm.roomToPreview = null;
 		vm.applyForRoom = applyForRoom;
-		vm.exist = false;
+//		vm.exist = false;
 
 		$scope.IsVisible = false;
 
