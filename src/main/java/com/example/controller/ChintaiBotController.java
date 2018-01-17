@@ -212,7 +212,7 @@ public class ChintaiBotController {
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
 				} else {
-					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
 					PushMessage pushMessage = new PushMessage(userId, textMessage);
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 				}
@@ -242,7 +242,7 @@ public class ChintaiBotController {
 
 				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "どれぐらい近いほうがいいですか？", Arrays.asList(
 						new MessageAction("徒歩5分以内", "徒歩5分以内 がいいです。"), new MessageAction("徒歩10分以内", "徒歩10分以内 がいいです。"),
-						new MessageAction("徒歩20分以内", "徒歩20分以内 がいいです。"), new MessageAction("気にしない", "気にしない がいいです。")));
+						new MessageAction("徒歩20分以内", "徒歩20分以内 がいいです。"), new MessageAction("気にしない", "駅からの距離は気にしません。")));
 				TemplateMessage templateMessage = new TemplateMessage("言語を選択してください。", buttonsTemplate);
 
 				PushMessage pushMessage = new PushMessage(userId, templateMessage);
@@ -301,11 +301,10 @@ public class ChintaiBotController {
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
 				} else {
-					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。");
+					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
 					PushMessage pushMessage = new PushMessage(userId, textMessage);
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 				}
-
 			}
 
 			// if the user choose other rooms
@@ -363,8 +362,16 @@ public class ChintaiBotController {
 			if (intentName.equals("distance")) {
 				String distanceToSearch = "";
 
-				if (customerMessage.contains("がいいです。")) {
-					distanceToSearch = customerMessage.replace(" がいいです。", "");
+				if (parameters != null && parameters.getString("distance") != null) {
+					distanceToSearch = parameters.getString("distance");
+				} else {
+					if (!customerMessage.equals("駅からの距離は気にしません。")) {
+						if (customerMessage.contains("がいいです。")) {
+							distanceToSearch = customerMessage.replace(" がいいです。", "");
+						}
+					} else {
+						distanceToSearch = "駅からの距離は気にしません。";
+					}
 				}
 
 				BotInformation botInformation = new BotInformation();
@@ -374,7 +381,7 @@ public class ChintaiBotController {
 
 				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "家賃はいくらがいいですか？", Arrays.asList(
 						new MessageAction("5万円未満", "5万円未満 がいいです。"), new MessageAction("7万円未満", "7万円未満 がいいです。"),
-						new MessageAction("10万円未満", "10万円未満 がいいです。"), new MessageAction("気にしない", "気にしない がいいです。")));
+						new MessageAction("10万円未満", "10万円未満 がいいです。"), new MessageAction("気にしない", "家賃は気にしません。")));
 				TemplateMessage templateMessage = new TemplateMessage("家賃はいくらがいいですか？", buttonsTemplate);
 
 				PushMessage pushMessage = new PushMessage(userId, templateMessage);
@@ -397,8 +404,15 @@ public class ChintaiBotController {
 			// if the user choose a price
 			if (intentName.equals("price")) {
 				String priceToSearch = "";
-				if (customerMessage.contains("がいいです。")) {
-					priceToSearch = customerMessage.replace(" がいいです。", "");
+
+				if (parameters != null && parameters.getString("price") != null) {
+					priceToSearch = parameters.getString("price");
+				} else if (!customerMessage.equals("家賃は気にしません。")) {
+					if (customerMessage.contains("がいいです。")) {
+						priceToSearch = customerMessage.replace(" がいいです。", "");
+					} else {
+						priceToSearch = "家賃は気にしません。";
+					}
 				}
 
 				BotInformation botInformation = new BotInformation();
@@ -470,8 +484,8 @@ public class ChintaiBotController {
 			byte[] titleByte = title.getBytes(StandardCharsets.UTF_8); // Explicit,
 			title = new String(titleByte, StandardCharsets.UTF_8);
 
-			/*************************/
-			String textToSend = "月" + room.getPrice() + "円";
+			String textToSend = "月" + room.getPrice() / 1000 + "円" + " | " + room.getBuildingType() + room.getFloor()
+					+ "階 \n" + room.getRoomID() + room.getRoomType();
 
 			if (textToSend.length() > 59) {
 				textToSend = textToSend.substring(0, 59);
@@ -574,9 +588,9 @@ public class ChintaiBotController {
 			System.out.println("minPrice : " + minPrice);
 			System.out.println("maxPrice : " + maxPrice);
 
-			if (!botInformation.getPriceToSearch().equals("気にしない")) {
+			if (!botInformation.getPriceToSearch().equals("家賃は気にしません。")) {
 				roomsDistance = roomRepository.findRoomsByPrice(minPrice, maxPrice);
-			} else if (botInformation.getPriceToSearch().equals("気にしない")) {
+			} else if (botInformation.getPriceToSearch().equals("家賃は気にしません。")) {
 				roomsDistance = roomRepository.findAll();
 			}
 
@@ -592,7 +606,7 @@ public class ChintaiBotController {
 			} else if (botInformation.getDistanceToSearch().equals("徒歩20分以内")) {
 				minDistance = 2;
 				maxDistance = 3;
-			} else if (botInformation.getDistanceToSearch().equals("気にしない")) {
+			} else if (botInformation.getDistanceToSearch().equals("駅からの距離は気にしません。")) {
 				minDistance = 3;
 				maxDistance = 10;
 			}
@@ -717,9 +731,9 @@ public class ChintaiBotController {
 			System.out.println("minPrice : " + minPrice);
 			System.out.println("maxPrice : " + maxPrice);
 
-			if (!botInformation.getPriceToSearch().equals("気にしない")) {
+			if (!botInformation.getPriceToSearch().equals("家賃は気にしません。")) {
 				roomsDistance = roomRepository.findRoomsByPrice(minPrice, maxPrice);
-			} else if (botInformation.getPriceToSearch().equals("気にしない")) {
+			} else if (botInformation.getPriceToSearch().equals("家賃は気にしません。")) {
 				roomsDistance = roomRepository.findAll();
 			}
 
@@ -735,7 +749,7 @@ public class ChintaiBotController {
 			} else if (botInformation.getDistanceToSearch().equals("徒歩20分以内")) {
 				minDistance = 2;
 				maxDistance = 3;
-			} else if (botInformation.getDistanceToSearch().equals("気にしない")) {
+			} else if (botInformation.getDistanceToSearch().equals("駅からの距離は気にしません。")) {
 				minDistance = 3;
 				maxDistance = 10;
 			}
