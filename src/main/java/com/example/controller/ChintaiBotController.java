@@ -377,6 +377,7 @@ public class ChintaiBotController {
 				BotInformation botInformation = new BotInformation();
 				botInformation = candidate.getBotInformation();
 				botInformation.setDistanceToSearch(distanceToSearch);
+				botInformation.setIntentName("distance");
 				botInformationRepository.saveAndFlush(botInformation);
 
 				ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "家賃はいくらがいいですか？", Arrays.asList(
@@ -403,6 +404,7 @@ public class ChintaiBotController {
 
 			// if the user choose a price
 			if (intentName.equals("price")) {
+
 				String priceToSearch = "";
 
 				if (parameters != null && parameters.getString("price") != null) {
@@ -417,6 +419,7 @@ public class ChintaiBotController {
 
 				BotInformation botInformation = new BotInformation();
 				botInformation = candidate.getBotInformation();
+				botInformation.setIntentName("price");
 				botInformation.setPriceToSearch(priceToSearch);
 				botInformationRepository.saveAndFlush(botInformation);
 
@@ -430,12 +433,28 @@ public class ChintaiBotController {
 
 			}
 
+			//if user doesn't want to search again
 			if (intentName.equals("No, I don't want to search with another condition.")) {
-
+				BotInformation botInformation = new BotInformation();
+				botInformation = candidate.getBotInformation();
+				botInformation.setIntentName("No, I don't want to search with another condition.");
+				botInformationRepository.saveAndFlush(botInformation);
+			
 				TextMessage textMessage = new TextMessage("分かりました。また、お部屋を探すときは言ってくださいね。");
 				PushMessage pushMessage = new PushMessage(userId, textMessage);
 				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			}
 
+			// if user clicks on help button in the menu
+			if (intentName.equals("help")) {
+				BotInformation botInformation = new BotInformation();
+				botInformation = candidate.getBotInformation();
+				botInformation.setIntentName("help");
+				botInformationRepository.saveAndFlush(botInformation);
+				
+				TextMessage textMessage = new TextMessage("お問い合わせ先はこちらです。");
+				PushMessage pushMessage = new PushMessage(userId, textMessage);
+					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 			}
 
 		} catch (Exception e) {
@@ -799,8 +818,15 @@ public class ChintaiBotController {
 					e.printStackTrace();
 				}
 			} else {
-				TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
-				PushMessage pushMessage = new PushMessage(userId, textMessage);
+				ConfirmTemplate confirmTemplate = new ConfirmTemplate("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
+						new MessageAction("はい", "はい。別の条件でもう一度探してみます。"),
+						new MessageAction("いいえ", "いいえ。別の条件で探さなくても大丈夫です。"));
+
+				TemplateMessage templateMessage = new TemplateMessage("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
+						confirmTemplate);
+
+				PushMessage pushMessage = new PushMessage(userId, templateMessage);
+
 				try {
 					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 				} catch (IOException e) {
