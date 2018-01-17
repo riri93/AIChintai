@@ -233,15 +233,12 @@
 						function(event, viewConfig) {
 
 							$rootScope.stateIsLoading = true;
-							console
-									.log("starttttttttttttttttttttttttttttttttttttttttttttttttttttttt");
 
 						});
 
 		$rootScope.$on('$viewContentLoaded', function(event) {
 
 			$rootScope.stateIsLoading = false;
-			console.log("finnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
 		});
 
 		// Hook success

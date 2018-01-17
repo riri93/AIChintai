@@ -36,6 +36,8 @@ public class CandidateRoomRelation implements Serializable {
 	
 	private boolean applied = false;
 	private Date appliedDate;
+	private Date preferedDate;
+	private String preferedTime;
 
 	public CandidateRoomRelationPK getCandidateRoomRelationPK() {
 		return candidateRoomRelationPK;
@@ -76,7 +78,22 @@ public class CandidateRoomRelation implements Serializable {
 	public void setAppliedDate(Date appliedDate) {
 		this.appliedDate = appliedDate;
 	}
-	
+
+	public Date getPreferedDate() {
+		return preferedDate;
+	}
+
+	public void setPreferedDate(Date preferedDate) {
+		this.preferedDate = preferedDate;
+	}
+
+	public String getPreferedTime() {
+		return preferedTime;
+	}
+
+	public void setPreferedTime(String preferedTime) {
+		this.preferedTime = preferedTime;
+	}
 	
 
 }

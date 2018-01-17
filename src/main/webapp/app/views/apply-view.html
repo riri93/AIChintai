@@ -120,9 +120,9 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">希望日にち*</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" name="preferedDateCand"
+							<input type="text" class="form-control" name="preferedDate"
 								ng-click="openBirthday()" uib-datepicker-popup
-								ng-model="apply.candidateToPreview.preferedDate"
+								ng-model="apply.preferedDate"
 								is-open="popupBirthday.opened" datepicker-options="dateOptions"
 								ng-required="true" close-text="Close"
 								alt-input-formats="altInputFormats" /> <span
@@ -130,15 +130,16 @@
 								style="color: red;">Prefered Date is required</span>
 						</div>
 					</div>
+
 					<div class="form-group">
 						<label class="col-sm-2 control-label">希望時間帯*</label>
 						<div class="col-sm-10">
-							<ui-select ng-model="apply.candidateToPreview.preferedTime"
+							<ui-select ng-model="apply.preferedTime"
 								name="preferedTime"> <ui-select-match
 								placeholder="希望時間帯を選択" required>
 							{{$select.selected}} </ui-select-match> <ui-select-choices
 								repeat="time in apply.preferedTime">
-							{{level}} </ui-select-choices> </ui-select>
+							{{preferedTime}} </ui-select-choices> </ui-select>
 							<span
 								ng-show="apply.applyForm.preferedTime.$dirty &amp;&amp; apply.applyForm.preferedTime.$error.required"
 								style="color: red;">prefered time range is required</span>
@@ -166,13 +167,15 @@
 </div>
 
 <!-- END panel-->
-
 <div class="text-center ng-scope" style="padding-bottom: 60px;">
+	<p>
+		<a href="line://ti/p/@ked9798o" style="text-align: center;"><b
+			class="ng-binding"> LINEにもどる </b></a>
+	</p>
 	<span>&copy;</span> <span ng-bind="app.year"></span> <span>-</span> <span
 		ng-bind="app.name"></span> <br /> <span ng-bind="app.description"></span>
 
 </div>
-
 
 
 
