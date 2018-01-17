@@ -439,8 +439,12 @@ public class ChintaiBotController {
 			}
 
 		} catch (Exception e) {
-			TextMessage textMessage = new TextMessage("ごめんなさい、わからないです。メニューをみてください。");
-			PushMessage pushMessage = new PushMessage(userId, textMessage);
+
+			ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null, "ごめんなさい。どういう意味か分かりません。もしかして、", Arrays
+					.asList(new MessageAction("お部屋を探したい", "お部屋を探したいです。"), new MessageAction("質問がある", "質問があります。")));
+			TemplateMessage templateMessage = new TemplateMessage("ごめんなさい。どういう意味か分かりません。もしかして、", buttonsTemplate);
+
+			PushMessage pushMessage = new PushMessage(userId, templateMessage);
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
 
 			e.printStackTrace();
