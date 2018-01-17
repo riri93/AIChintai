@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import static org.assertj.core.api.Assertions.in;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -433,13 +435,13 @@ public class ChintaiBotController {
 
 			}
 
-			//if user doesn't want to search again
+			// if user doesn't want to search again
 			if (intentName.equals("No, I don't want to search with another condition.")) {
 				BotInformation botInformation = new BotInformation();
 				botInformation = candidate.getBotInformation();
 				botInformation.setIntentName("No, I don't want to search with another condition.");
 				botInformationRepository.saveAndFlush(botInformation);
-			
+
 				TextMessage textMessage = new TextMessage("分かりました。また、お部屋を探すときは言ってくださいね。");
 				PushMessage pushMessage = new PushMessage(userId, textMessage);
 				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
@@ -451,10 +453,20 @@ public class ChintaiBotController {
 				botInformation = candidate.getBotInformation();
 				botInformation.setIntentName("help");
 				botInformationRepository.saveAndFlush(botInformation);
-				
+
 				TextMessage textMessage = new TextMessage("お問い合わせ先はこちらです。");
 				PushMessage pushMessage = new PushMessage(userId, textMessage);
-					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			}
+
+			// if user clicks on recomment room in the menu
+			if (intentName.equals("recommend room")) {
+				BotInformation botInformation = new BotInformation();
+				botInformation = candidate.getBotInformation();
+				botInformation.setIntentName("recommend room");
+				botInformationRepository.saveAndFlush(botInformation);
+				// TODO
+				
 			}
 
 		} catch (Exception e) {
