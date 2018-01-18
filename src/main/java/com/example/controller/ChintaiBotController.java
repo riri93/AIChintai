@@ -34,7 +34,7 @@ import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.Action;
 import com.linecorp.bot.model.action.MessageAction;
-
+import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.template.ButtonsTemplate;
 import com.linecorp.bot.model.message.TextMessage;
@@ -48,6 +48,10 @@ import retrofit2.Response;
 
 @RestController
 public class ChintaiBotController {
+
+	private String CHANNEL_ACCESS_TOKEN = "Zc6e1XlR7/4a6uNGB5mQAF21zDgCct5C43eL4DrKdfdXX73vGvFtvVPQbTcZNwbHulPADQCtLMKjwI34KA1aZh9hSiFej9tf8UOE/4x8N5gdTcpef1jMVe2ly8ZWhmyH+LKlNOGJFlZeiCjBSo35AgdB04t89/1O/w1cDnyilFU=";
+
+	private String urlDomain = "http://ec2-52-23-16-23.compute-1.amazonaws.com";
 
 	@Autowired
 	CandidateRepository candidateRepository;
@@ -85,8 +89,6 @@ public class ChintaiBotController {
 	 */
 	@RequestMapping(value = "/webhookAIChintai", method = RequestMethod.POST)
 	private void webhook(@RequestBody Map<String, Object> obj) throws JSONException, IOException {
-
-		String CHANNEL_ACCESS_TOKEN = "Zc6e1XlR7/4a6uNGB5mQAF21zDgCct5C43eL4DrKdfdXX73vGvFtvVPQbTcZNwbHulPADQCtLMKjwI34KA1aZh9hSiFej9tf8UOE/4x8N5gdTcpef1jMVe2ly8ZWhmyH+LKlNOGJFlZeiCjBSo35AgdB04t89/1O/w1cDnyilFU=";
 
 		JSONObject jsonResult = new JSONObject(obj);
 
@@ -533,19 +535,12 @@ public class ChintaiBotController {
 			System.out.println("textToSend : " + textToSend);
 			System.out.println("img : " + img);
 
-			String detail = "Detail";
-
 			String option = "詳細をみる";
+			String link = urlDomain + "/#!/apply/" + room.getIdRoom() + "/" + candidate.getIdUserInformation();
 
-			// String link = "月" + room.getPrice() + "円";
+			URIAction uriAction = new URIAction(option, link);
 
-			// URIAction uriAction1 = new URIAction(detail, link);
-			// MessageAction messageAction1 = new MessageAction(detail, "月" +
-			// room.getPrice() + "円");
-
-			MessageAction messageAction = new MessageAction(option, "詳細をみる");
-
-			CarouselColumn column = new CarouselColumn(img, title, textToSend, Arrays.asList(messageAction));
+			CarouselColumn column = new CarouselColumn(img, title, textToSend, Arrays.asList(uriAction));
 			columns.add(column);
 		}
 
