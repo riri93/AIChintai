@@ -1,7 +1,10 @@
 package com.example.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
@@ -48,27 +51,40 @@ public class RoomController {
 	 * @throws Exception
 	 * 
 	 */
-	@RequestMapping(value = "/applya/{idRoom}/{idCandidate}", method = RequestMethod.POST)
-	public LinkedHashMap<String, Object> applyForRoom(@PathVariable("idRoom") int idRoom,
-			@PathVariable("idCandidate") int idCandidate) {
+	@RequestMapping(value = "/applyForRoom", method = RequestMethod.POST)
+	public LinkedHashMap<String, Object> applyForRoom(@RequestBody Map<String, String> js) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date preferedDate = new Date();
+		try {
+			preferedDate = formatter.parse(js.get("preferedDate"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		String preferedTime = js.get("preferedTime");
+		Room room = new Room();
+		room = roomRepository.findOne(Integer.parseInt(js.get("idRoom")));
+		Candidate candidate = new Candidate();
+		candidate = candidateRepository.findOne(Integer.parseInt(js.get("idCandidate")));
 
 		LinkedHashMap<String, Object> json = new LinkedHashMap<String, Object>();
 
 		System.out.println("*******************************************************");
 		CandidateRoomRelation candidateRoomRelation = new CandidateRoomRelation();
 		CandidateRoomRelationPK candidateRoomRelationPK = new CandidateRoomRelationPK();
-		candidateRoomRelationPK.setIdCandidate(idCandidate);
-		candidateRoomRelationPK.setIdRoom(idRoom);
-		System.out.println("idCandidate: *****************" + idCandidate);
-		System.out.println("idRoom: **********************" + idRoom);
+		candidateRoomRelationPK.setIdCandidate(candidate.getIdUserInformation());
+		candidateRoomRelationPK.setIdRoom(room.getIdRoom());
+		System.out.println("idCandidate: *****************" + candidate.getIdUserInformation());
+		System.out.println("idRoom: **********************" + room.getIdRoom());
 		candidateRoomRelation = candidateRoomRepository.findOne(candidateRoomRelationPK);
 
 		if (candidateRoomRelation == null) {
-			candidateRoomRelation.setCandidateRoomRelationPK(candidateRoomRelationPK);
-			candidateRoomRelation.setApplied(true);
-			candidateRoomRelation.setAppliedDate(new Date());
-			candidateRoomRepository.save(candidateRoomRelation);
-			json.put("candidateRoomRelation", candidateRoomRelation);
+			CandidateRoomRelation relation = new CandidateRoomRelation();
+			relation.setCandidateRoomRelationPK(candidateRoomRelationPK);
+			relation.setApplied(true);
+			relation.setAppliedDate(new Date());
+			relation.setPreferedDate(preferedDate);
+			relation.setPreferedTime(preferedTime);
+			candidateRoomRepository.saveAndFlush(relation);
 			json.put("exist", false);
 			// String subjectEmail = "新規応募： " + job.getShop().getNameShop() + " " +
 			// job.getPositionName();
@@ -96,6 +112,7 @@ public class RoomController {
 			// }
 			// }
 		} else {
+			candidateRoomRepository.saveAndFlush(candidateRoomRelation);
 			json.put("exist", true);
 		}
 		return json;
@@ -105,15 +122,17 @@ public class RoomController {
 	public LinkedHashMap<String, Object> initApplyRoom(@RequestParam("idRoom") int idRoom,
 			@RequestParam("idCandidate") int idCandidate) {
 		LinkedHashMap<String, Object> json = new LinkedHashMap<String, Object>();
-		Candidate candidate = new Candidate();
-		candidate = candidateRepository.findCandidateById(idCandidate);
-		Room room = new Room();
-		room = roomRepository.findRoomById(idRoom);
-		if (room != null && candidate != null) {
-			json.put("room", room);
-			json.put("candidate", candidate);
+		CandidateRoomRelationPK candidateRoomRelationPK = new CandidateRoomRelationPK();
+		candidateRoomRelationPK.setIdCandidate(idCandidate);
+		candidateRoomRelationPK.setIdRoom(idRoom);
+
+		CandidateRoomRelation relation = new CandidateRoomRelation();
+		relation = candidateRoomRepository.findOne(candidateRoomRelationPK);
+		if (relation != null) {
+			json.put("candidateRoomRelation", relation);
 			json.put("exist", true);
 		} else {
+			json.put("candidateRoomRelation", relation);
 			json.put("exist", false);
 		}
 		return json;
