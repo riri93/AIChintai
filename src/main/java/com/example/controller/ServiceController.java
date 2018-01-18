@@ -206,6 +206,13 @@ public class ServiceController {
 
 				System.out.println("/*********************");
 				Room room = new Room();
+				if (room_id != "" && room_id != null) {
+					room.setRoomID(room_id);
+					System.out.println("/***set*****name_building**************");
+
+				}
+				
+				
 				if (name_building != "" && name_building != null) {
 					room.setNameBuilding(name_building);
 					System.out.println("/***set*****name_building**************");

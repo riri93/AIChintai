@@ -34,7 +34,7 @@ import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.Action;
 import com.linecorp.bot.model.action.MessageAction;
-
+import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.template.ButtonsTemplate;
 import com.linecorp.bot.model.message.TextMessage;
@@ -48,6 +48,10 @@ import retrofit2.Response;
 
 @RestController
 public class ChintaiBotController {
+
+	private String CHANNEL_ACCESS_TOKEN = "Zc6e1XlR7/4a6uNGB5mQAF21zDgCct5C43eL4DrKdfdXX73vGvFtvVPQbTcZNwbHulPADQCtLMKjwI34KA1aZh9hSiFej9tf8UOE/4x8N5gdTcpef1jMVe2ly8ZWhmyH+LKlNOGJFlZeiCjBSo35AgdB04t89/1O/w1cDnyilFU=";
+
+	private String urlDomain = "http://ec2-52-23-16-23.compute-1.amazonaws.com";
 
 	@Autowired
 	CandidateRepository candidateRepository;
@@ -85,8 +89,6 @@ public class ChintaiBotController {
 	 */
 	@RequestMapping(value = "/webhookAIChintai", method = RequestMethod.POST)
 	private void webhook(@RequestBody Map<String, Object> obj) throws JSONException, IOException {
-
-		String CHANNEL_ACCESS_TOKEN = "Zc6e1XlR7/4a6uNGB5mQAF21zDgCct5C43eL4DrKdfdXX73vGvFtvVPQbTcZNwbHulPADQCtLMKjwI34KA1aZh9hSiFej9tf8UOE/4x8N5gdTcpef1jMVe2ly8ZWhmyH+LKlNOGJFlZeiCjBSo35AgdB04t89/1O/w1cDnyilFU=";
 
 		JSONObject jsonResult = new JSONObject(obj);
 
@@ -518,7 +520,7 @@ public class ChintaiBotController {
 			byte[] titleByte = title.getBytes(StandardCharsets.UTF_8); // Explicit,
 			title = new String(titleByte, StandardCharsets.UTF_8);
 
-			String textToSend = "月" + room.getPrice() / 1000 + "円" + " | " + room.getBuildingType() + room.getFloor()
+			String textToSend = "月" + room.getPrice() / 10000 + "円" + " | " + room.getBuildingType() + room.getFloor()
 					+ "階 \n" + room.getRoomID() + room.getRoomType();
 
 			if (textToSend.length() > 59) {
@@ -533,19 +535,12 @@ public class ChintaiBotController {
 			System.out.println("textToSend : " + textToSend);
 			System.out.println("img : " + img);
 
-			String detail = "Detail";
-
 			String option = "詳細をみる";
+			String link = urlDomain + "/#!/apply/" + room.getIdRoom() + "/" + candidate.getIdUserInformation();
 
-			// String link = "月" + room.getPrice() + "円";
+			URIAction uriAction = new URIAction(option, link);
 
-			// URIAction uriAction1 = new URIAction(detail, link);
-			// MessageAction messageAction1 = new MessageAction(detail, "月" +
-			// room.getPrice() + "円");
-
-			MessageAction messageAction = new MessageAction(option, "詳細をみる");
-
-			CarouselColumn column = new CarouselColumn(img, title, textToSend, Arrays.asList(messageAction));
+			CarouselColumn column = new CarouselColumn(img, title, textToSend, Arrays.asList(uriAction));
 			columns.add(column);
 		}
 
@@ -558,14 +553,10 @@ public class ChintaiBotController {
 
 		try {
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
-			/******** THREAD ***********/
-			anAsynchronousService.executeAsynchronously(userId, "japanese", CHANNEL_ACCESS_TOKEN);
-			/****************/
 		} catch (IOException e) {
 			System.out.println("Exception is raised ");
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -682,6 +673,11 @@ public class ChintaiBotController {
 				} catch (IOException | JSONException e) {
 					e.printStackTrace();
 				}
+
+				/******** THREAD ***********/
+				anAsynchronousService.executeAsynchronously(userId, "japanese", CHANNEL_ACCESS_TOKEN);
+				/****************/
+
 			} else {
 
 				ConfirmTemplate confirmTemplate = new ConfirmTemplate("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
@@ -828,6 +824,10 @@ public class ChintaiBotController {
 				} catch (IOException | JSONException e) {
 					e.printStackTrace();
 				}
+
+				/******** THREAD ***********/
+				anAsynchronousService.executeAsynchronously(userId, "japanese", CHANNEL_ACCESS_TOKEN);
+				/****************/
 			} else {
 				ConfirmTemplate confirmTemplate = new ConfirmTemplate("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
 						new MessageAction("はい", "はい。別の条件でもう一度探してみます。"),
@@ -886,6 +886,14 @@ public class ChintaiBotController {
 			try {
 				sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, roomsToDisplay);
 			} catch (IOException | JSONException e) {
+				e.printStackTrace();
+			}
+
+			TextMessage textMessage = new TextMessage("どうぞ！");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			try {
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
