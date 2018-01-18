@@ -518,7 +518,7 @@ public class ChintaiBotController {
 			byte[] titleByte = title.getBytes(StandardCharsets.UTF_8); // Explicit,
 			title = new String(titleByte, StandardCharsets.UTF_8);
 
-			String textToSend = "月" + room.getPrice() / 1000 + "円" + " | " + room.getBuildingType() + room.getFloor()
+			String textToSend = "月" + room.getPrice() / 10000 + "円" + " | " + room.getBuildingType() + room.getFloor()
 					+ "階 \n" + room.getRoomID() + room.getRoomType();
 
 			if (textToSend.length() > 59) {
@@ -558,14 +558,10 @@ public class ChintaiBotController {
 
 		try {
 			LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
-			/******** THREAD ***********/
-			anAsynchronousService.executeAsynchronously(userId, "japanese", CHANNEL_ACCESS_TOKEN);
-			/****************/
 		} catch (IOException e) {
 			System.out.println("Exception is raised ");
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -682,6 +678,11 @@ public class ChintaiBotController {
 				} catch (IOException | JSONException e) {
 					e.printStackTrace();
 				}
+
+				/******** THREAD ***********/
+				anAsynchronousService.executeAsynchronously(userId, "japanese", CHANNEL_ACCESS_TOKEN);
+				/****************/
+
 			} else {
 
 				ConfirmTemplate confirmTemplate = new ConfirmTemplate("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
@@ -828,6 +829,10 @@ public class ChintaiBotController {
 				} catch (IOException | JSONException e) {
 					e.printStackTrace();
 				}
+
+				/******** THREAD ***********/
+				anAsynchronousService.executeAsynchronously(userId, "japanese", CHANNEL_ACCESS_TOKEN);
+				/****************/
 			} else {
 				ConfirmTemplate confirmTemplate = new ConfirmTemplate("条件に該当するお部屋が見つかりませんでした。別の条件でもう一度探してみますか？",
 						new MessageAction("はい", "はい。別の条件でもう一度探してみます。"),
@@ -886,6 +891,14 @@ public class ChintaiBotController {
 			try {
 				sendCarouselRooms(candidate, userId, CHANNEL_ACCESS_TOKEN, timestamp, roomsToDisplay);
 			} catch (IOException | JSONException e) {
+				e.printStackTrace();
+			}
+
+			TextMessage textMessage = new TextMessage("どうぞ！");
+			PushMessage pushMessage = new PushMessage(userId, textMessage);
+			try {
+				LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
