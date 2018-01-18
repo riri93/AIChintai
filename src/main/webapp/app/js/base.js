@@ -62,7 +62,7 @@ var hasOwn = class2type.hasOwnProperty;
 
 var support = {};
 
-
+tit
 
 var
 	version = "2.2.4",
