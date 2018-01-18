@@ -19,7 +19,7 @@ public class CandidateController {
 
 	@RequestMapping(value = "/saveCandidate", method = RequestMethod.POST)
 	public void saveCandidate(@RequestBody @Valid Candidate candidate) {
-		candidateRepository.save(candidate);
+		candidateRepository.saveAndFlush(candidate);
 	}
 
 	@RequestMapping(value = "/getCandidate", method = RequestMethod.GET)

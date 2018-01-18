@@ -132,7 +132,12 @@ public class RoomController {
 			json.put("candidateRoomRelation", relation);
 			json.put("exist", true);
 		} else {
-			json.put("candidateRoomRelation", relation);
+			Room room = new Room();
+			room = roomRepository.findOne(idRoom);
+			Candidate candidate = new Candidate();
+			candidate = candidateRepository.findOne(idCandidate);
+			json.put("candidate", candidate);
+			json.put("room", room);
 			json.put("exist", false);
 		}
 		return json;

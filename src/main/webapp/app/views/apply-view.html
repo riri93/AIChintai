@@ -41,8 +41,14 @@
 
 				<div class="col-sm-5">
 					<div style="position: relative;">
+						<img alt="Image" class="img-responsive"
+							ng-show="apply.roomToPreview.pictureRoom != null"
+							ng-src="http://localhost:8080/#!/images/{{apply.roomToPreview.pictureRoom}}">
+						<img alt="Image" class="img-responsive"
+							ng-show="apply.roomToPreview.pictureRoom == null"
+							ng-src="/app/img/default.png">
 						<div
-							style="width: 100%; background: rgba(0, 0, 0, 0.5); position: absolute; bottom: 0; color: #fff; padding: 10px 10px 0 10px;">
+							style="width: 100%; background: rgba(0, 0, 0, 0.5); position: initial; bottom: 0; color: #fff; padding: 10px 10px 0 10px;">
 							<ul class="list-unstyled">
 								<li class="mb-sm ng-binding">{{apply.roomToPreview.nameBuilding}}</li>
 								<li class="mb-sm ng-binding">{{apply.roomToPreview.price}}
@@ -50,17 +56,10 @@
 								<li class="mb-sm ng-binding">{{apply.roomToPreview.keyMoney}}
 									| {{apply.roomToPreview.deposit}} |
 									{{apply.roomToPreview.insurance}}</li>
-								<li class="mb-sm ng-binding">{{apply.roomToPreview.detail}}</li>
 
 							</ul>
 						</div>
-						<img alt="Image" class="img-responsive"
-							ng-show="apply.roomToPreview.pictureRoom != null"
-							ng-src="http://localhost:8080/images/{{apply.roomToPreview.pictureRoom}}">
-						<img alt="Image" class="img-responsive"
-							ng-show="apply.roomToPreview.pictureRoom == null"
-							ng-src="../img/default.png">
-
+						{{apply.roomToPreview.detail}}
 					</div>
 
 				</div>
@@ -122,10 +121,9 @@
 						<div class="col-sm-10">
 							<input type="text" class="form-control" name="preferedDate"
 								ng-click="openBirthday()" uib-datepicker-popup
-								ng-model="apply.preferedDate"
-								is-open="popupBirthday.opened" datepicker-options="dateOptions"
-								ng-required="true" close-text="Close"
-								alt-input-formats="altInputFormats" /> <span
+								ng-model="apply.preferedDate" is-open="popupBirthday.opened"
+								datepicker-options="dateOptions" ng-required="true"
+								close-text="Close" alt-input-formats="altInputFormats" /> <span
 								ng-show="apply.applyForm.preferedDateCand.$dirty &amp;&amp; apply.applyForm.preferedDateCand.$error.required"
 								style="color: red;">Prefered Date is required</span>
 						</div>
@@ -134,12 +132,11 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">希望時間帯*</label>
 						<div class="col-sm-10">
-							<ui-select ng-model="apply.preferedTime"
-								name="preferedTime"> <ui-select-match
-								placeholder="希望時間帯を選択" required>
+							<ui-select ng-model="apply.preferedTime" name="preferedTime">
+							<ui-select-match placeholder="希望時間帯を選択" required>
 							{{$select.selected}} </ui-select-match> <ui-select-choices
-								repeat="time in apply.preferedTime">
-							{{preferedTime}} </ui-select-choices> </ui-select>
+								repeat="time in apply.preferedTimeList">
+							{{time}} </ui-select-choices> </ui-select>
 							<span
 								ng-show="apply.applyForm.preferedTime.$dirty &amp;&amp; apply.applyForm.preferedTime.$error.required"
 								style="color: red;">prefered time range is required</span>

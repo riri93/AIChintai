@@ -58,6 +58,7 @@
 										model.$setViewValue(element.val());
 									});
 								});
+				
 			}
 		};
 
