@@ -149,7 +149,6 @@ public class ChintaiBotController {
 
 			// create bot information of null
 			if (candidate.getBotInformation() == null) {
-				System.out.println("*****create botInformation********");
 				BotInformation botInformation = new BotInformation();
 				botInformation.setIntentName("search room");
 				botInformationRepository.saveAndFlush(botInformation);
@@ -162,60 +161,64 @@ public class ChintaiBotController {
 			if (intentName.equals("Default Fallback Intent")) {
 
 				BotInformation botInformation = candidate.getBotInformation();
-				botInformation.setIntentName("Default Fallback Intent");
-				botInformation.setStationToSearch(customerMessage);
-				botInformationRepository.saveAndFlush(botInformation);
 
-				Page nearestStations;
+				if (botInformation.getIntentName().equals("search room")) {
+					
+					botInformation.setStationToSearch(customerMessage);
+					botInformationRepository.saveAndFlush(botInformation);
 
-				System.out.println("********************customerMessage********************************"
-						+ candidate.getBotInformation().getStationToSearch());
-				nearestStations = nearestStationRepository
-						.findStations(candidate.getBotInformation().getStationToSearch(), new PageRequest(0, 3));
-				System.out.println("********************nearestStations********************************"
-						+ nearestStations.getContent().size());
-				System.out.println("********** TOTAL PAGES *********** " + nearestStations.getTotalPages());
-				if (nearestStations.getContent().size() > 0) {
+					Page nearestStations;
 
-					List<Action> messageActions = new ArrayList<Action>();
-					List<Object[]> nearStationObj = nearestStations.getContent();
+					nearestStations = nearestStationRepository
+							.findStations(candidate.getBotInformation().getStationToSearch(), new PageRequest(0, 3));
 
-					for (Object[] ObjNearestStation : nearStationObj) {
-						NearestStation station = nearestStationRepository
-								.findNearStationById((int) ObjNearestStation[0]);
-						String lineName = station.getLineStation().getLineNameJapanese();
-						if (lineName.length() > 6) {
-							lineName = lineName.substring(0, 6);
+					if (nearestStations.getContent().size() > 0) {
+
+						List<Action> messageActions = new ArrayList<Action>();
+						List<Object[]> nearStationObj = nearestStations.getContent();
+
+						for (Object[] ObjNearestStation : nearStationObj) {
+							NearestStation station = nearestStationRepository
+									.findNearStationById((int) ObjNearestStation[0]);
+							String lineName = station.getLineStation().getLineNameJapanese();
+							if (lineName.length() > 6) {
+								lineName = lineName.substring(0, 6);
+							}
+							byte[] lineNameStation = lineName.getBytes(StandardCharsets.UTF_8);
+							String lineNameJapanese = new String(lineNameStation, StandardCharsets.UTF_8);
+
+							String stationName = station.getJapaneseStation();
+							if (station.getJapaneseStation().length() > 6) {
+								stationName = station.getJapaneseStation().substring(0, 6);
+							}
+
+							byte[] b = stationName.getBytes(StandardCharsets.UTF_8); // Explicit,
+							String japanesString = new String(b, StandardCharsets.UTF_8);
+							MessageAction ma = new MessageAction(japanesString + "駅 | " + lineNameJapanese,
+									station.getJapaneseStation() + " 駅 | "
+											+ station.getLineStation().getLineNameJapanese() + " の近くで探しています。");
+							messageActions.add(ma);
 						}
-						byte[] lineNameStation = lineName.getBytes(StandardCharsets.UTF_8);
-						String lineNameJapanese = new String(lineNameStation, StandardCharsets.UTF_8);
 
-						String stationName = station.getJapaneseStation();
-						if (station.getJapaneseStation().length() > 6) {
-							stationName = station.getJapaneseStation().substring(0, 6);
-						}
+						String neareststationNA = "いいえ。私が探している駅ではありません。";
+						messageActions.add(new MessageAction("違う", neareststationNA));
+						ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null,
+								botInformation.getStationToSearch() + "はこの駅のことですか？", messageActions);
+						TemplateMessage templateMessage = new TemplateMessage("駅", buttonsTemplate);
 
-						byte[] b = stationName.getBytes(StandardCharsets.UTF_8); // Explicit,
-						String japanesString = new String(b, StandardCharsets.UTF_8);
-						MessageAction ma = new MessageAction(japanesString + "駅 | " + lineNameJapanese,
-								station.getJapaneseStation() + " 駅 | " + station.getLineStation().getLineNameJapanese()
-										+ " の近くで探しています。");
-						messageActions.add(ma);
+						PushMessage pushMessage = new PushMessage(userId, templateMessage);
+						LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage)
+								.execute();
+
+					} else {
+						TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
+						PushMessage pushMessage = new PushMessage(userId, textMessage);
+						LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage)
+								.execute();
 					}
-
-					String neareststationNA = "いいえ。私が探している駅ではありません。";
-					messageActions.add(new MessageAction("違う", neareststationNA));
-					ButtonsTemplate buttonsTemplate = new ButtonsTemplate(null, null,
-							botInformation.getStationToSearch() + "はこの駅のことですか？", messageActions);
-					TemplateMessage templateMessage = new TemplateMessage("駅", buttonsTemplate);
-
-					PushMessage pushMessage = new PushMessage(userId, templateMessage);
-					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
-
 				} else {
-					TextMessage textMessage = new TextMessage("ごめんなさい。駅が見つかりませんでした。勉強不足です。。。");
-					PushMessage pushMessage = new PushMessage(userId, textMessage);
-					LineMessagingServiceBuilder.create(CHANNEL_ACCESS_TOKEN).build().pushMessage(pushMessage).execute();
+
+					// TODO
 				}
 
 			}
