@@ -163,7 +163,7 @@ public class ChintaiBotController {
 				BotInformation botInformation = candidate.getBotInformation();
 
 				if (botInformation.getIntentName().equals("search room")) {
-					
+
 					botInformation.setStationToSearch(customerMessage);
 					botInformationRepository.saveAndFlush(botInformation);
 
