@@ -521,7 +521,7 @@ public class ChintaiBotController {
 			title = new String(titleByte, StandardCharsets.UTF_8);
 
 			String textToSend = "月" + room.getPrice() / 10000 + "円" + " | " + room.getBuildingType() + room.getFloor()
-					+ "階 \n" + room.getRoomID() + room.getRoomType();
+					+ "階 \n" + room.getRoomNumber() + room.getRoomType();
 
 			if (textToSend.length() > 59) {
 				textToSend = textToSend.substring(0, 59);
