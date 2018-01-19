@@ -185,19 +185,22 @@
 		};
 
 		 $scope.dateOptions = {
+			dateDisabled: disabled,
 			formatYear : 'yy',
 			maxDate : new Date(2020, 5, 22),
-			minDate : new Date(),
+			minDate : new Date(Date.now()),
 			startingDay : 1,
 			initDate : new Date(Date.now())
 		};
 		
 
-				 // Disable weekend selection
-		function disabled(data) {
+		// Disable weekend selection
+		 function disabled(data) {
 			var date = data.date, mode = data.mode;
+			var now = new Date(Date.now());
 			return mode === 'day'
-					&& (date.getDay() === 0 || date.getDay() === 6);
+					&& (date <= now)
+//			(date.getDay() === 0 || date.getDay() === 6)
 		}
 		
 
@@ -206,6 +209,7 @@
 			$scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null
 					: new Date();
 			$scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+			
 		};
 		
 		 $scope.toggleMin();

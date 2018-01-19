@@ -670,8 +670,8 @@
 		// Global Settings
 		// -----------------------------------
 		$rootScope.app = {
-			name : '株式会社セントメディア',
-			description : 'Find Works Japan',
+			name : 'Find Rooms in Japan',
+			description : 'Find Rooms in Japan',
 			year : ((new Date()).getFullYear()),
 			layout : {
 				isFixed : true,
