@@ -162,6 +162,8 @@ public class ChintaiBotController {
 
 				BotInformation botInformation = candidate.getBotInformation();
 
+				System.out.println("*****************INTENT: " + botInformation.getIntentName());
+
 				if (botInformation.getIntentName().equals("search room")) {
 
 					botInformation.setStationToSearch(customerMessage);
