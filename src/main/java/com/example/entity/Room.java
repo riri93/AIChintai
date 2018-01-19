@@ -23,6 +23,7 @@ public class Room implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int idRoom;
 	private String roomID;
+	private String roomNumber;
 	private String nameBuilding;
 	private String buildingType;
 	private String floor;
@@ -179,6 +180,14 @@ public class Room implements Serializable {
 
 	public void setRoomType(String roomType) {
 		this.roomType = roomType;
+	}
+
+	public String getRoomNumber() {
+		return roomNumber;
+	}
+
+	public void setRoomNumber(String roomNumber) {
+		this.roomNumber = roomNumber;
 	}
 
 }
