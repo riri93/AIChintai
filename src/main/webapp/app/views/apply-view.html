@@ -43,7 +43,7 @@
 					<div style="position: relative;">
 						<img alt="Image" class="img-responsive"
 							ng-show="apply.roomToPreview.pictureRoom != null"
-							ng-src="http://localhost:8080/#!/images/{{apply.roomToPreview.pictureRoom}}">
+							ng-src="opt/apache-tomcat-8.5.24/images/{{apply.roomToPreview.pictureRoom}}">
 						<img alt="Image" class="img-responsive"
 							ng-show="apply.roomToPreview.pictureRoom == null"
 							ng-src="/app/img/default.png">
@@ -53,9 +53,9 @@
 								<li class="mb-sm ng-binding">{{apply.roomToPreview.nameBuilding}}</li>
 								<li class="mb-sm ng-binding">{{apply.roomToPreview.price}}
 									({{apply.roomToPreview.managementFee}})</li>
-								<li class="mb-sm ng-binding">{{apply.roomToPreview.keyMoney}}
-									| {{apply.roomToPreview.deposit}} |
-									{{apply.roomToPreview.insurance}}</li>
+								<li class="mb-sm ng-binding">{{apply.keyMoney}}
+									| {{apply.deposit}} |
+									{{apply.insurance}}</li>
 
 							</ul>
 						</div>

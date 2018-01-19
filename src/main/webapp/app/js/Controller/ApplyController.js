@@ -21,6 +21,10 @@
 		vm.preferedTime = "午前中";
 		$scope.IsVisible = false;
 		vm.openMapModal = openMapModal;
+		
+		vm.keyMoney = 0;
+		vm.deposit = 0;
+		vm.insurance = 0;
 
 		vm.preferedTimeList = [ "午前中", "昼", "午後", "夜", "いつでも " ];
 
@@ -71,7 +75,29 @@
 										vm.candidateToPreview = res.candidate;
 										vm.roomToPreview = res.room;
 										
+										
 										console.log("---------------No Relation --------------");
+									}
+									
+									
+									if(vm.roomToPreview.keyMoney == 0){
+										vm.keyMoney = '礼金なし';
+									}else{
+										vm.keyMoney = '礼金あり';
+									}
+									
+									
+
+									if(vm.roomToPreview.deposit == 0){
+										vm.deposit = '敷金なし';
+									}else{
+										vm.deposit = '敷金あり';
+									}
+									
+									if(vm.roomToPreview.insurance == 0){
+										vm.insurance = '保証金なし';
+									}else{
+										vm.insurance = '保証金あり';
 									}
 								} else {
 									console
@@ -199,8 +225,8 @@
 			var date = data.date, mode = data.mode;
 			var now = new Date(Date.now());
 			return mode === 'day'
-					&& (date <= now)
-//			(date.getDay() === 0 || date.getDay() === 6)
+					&& (date < now) 
+// (date.getDay() === 0 || date.getDay() === 6)
 		}
 		
 
@@ -350,22 +376,23 @@
 		 }
 		 
 		 
-//		 function getAddress(location){
-//			 console.log("hellooo");
-//			console.log(location);
-//			 $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+location+"&key=AIzaSyA-X7GGbSw0m0PvQ8_ibHBCQW1vew8_fMs",function(data, textStatus){
-//				 return data.results[0].formatted_address;
-//				 // $.each(data.Placemark, function(key, val) {
-//// console.log("val.address: " +val.address)
-//// if(val.address !=null){
-//// return val.address;
-//// }else{
-//// return null;
-//// }
-////
-//// });
-//			 });
-//			 }
+// function getAddress(location){
+// console.log("hellooo");
+// console.log(location);
+// $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address="+location+"&key=AIzaSyA-X7GGbSw0m0PvQ8_ibHBCQW1vew8_fMs",function(data,
+// textStatus){
+// return data.results[0].formatted_address;
+// // $.each(data.Placemark, function(key, val) {
+// // console.log("val.address: " +val.address)
+// // if(val.address !=null){
+// // return val.address;
+// // }else{
+// // return null;
+// // }
+// //
+// // });
+// });
+// }
 		 
 		 
 		 
